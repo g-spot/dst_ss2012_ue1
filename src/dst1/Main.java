@@ -1,5 +1,9 @@
 package dst1;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 public class Main {
 
 	private Main() {
@@ -22,6 +26,8 @@ public class Main {
 	}
 
 	public static void dst01() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("grid");
+		EntityManager em = emf.createEntityManager();
 		System.out.println("Hello World.");
 	}
 

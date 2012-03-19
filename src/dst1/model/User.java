@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -17,7 +19,9 @@ public class User {
 	private byte[] password;
 	@Embedded
 	private Address address;
+	@OneToMany
 	private List<Job> jobList;
+	@OneToMany
 	private List<Membership> membershipList;
 	
 	public User() {

@@ -11,7 +11,7 @@ public class Environment {
 	@Id
 	private Long id;
 	private String workflow;
-	private List<String> params;
+	transient private List<String> params; // TODO remove transient
 	
 	public Environment() {
 		this.params = new ArrayList<String>();

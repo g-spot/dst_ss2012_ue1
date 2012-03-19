@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Execution {
@@ -14,7 +16,9 @@ public class Execution {
 	private Date start;
 	private Date end;
 	private JobStatus status;
+	@OneToOne
 	private Job job;
+	@ManyToMany
 	private List<Computer> computerList;
 	
 	public Execution() {
