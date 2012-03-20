@@ -12,19 +12,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.UniqueConstraint;
 
-@Entity
+//@Entity
 public class Computer {
-	@Id
+	//@Id
 	private Long id;
-	@Column(unique=true)
+	//@Column(unique=true)
 	private String name;
 	private int cpus;
 	private String location;
 	private Date creation;
 	private Date lastUpdate;
-	@ManyToMany
+	//@ManyToMany
 	private List<Execution> executionList;
-	@ManyToOne
+	//@ManyToOne
 	private Cluster cluster;
 	
 	public Computer() {

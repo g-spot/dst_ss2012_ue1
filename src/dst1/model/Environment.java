@@ -3,6 +3,7 @@ package dst1.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -11,7 +12,8 @@ public class Environment {
 	@Id
 	private Long id;
 	private String workflow;
-	transient private List<String> params; // TODO remove transient
+	@ElementCollection
+	private List<String> params;
 	
 	public Environment() {
 		this.params = new ArrayList<String>();
