@@ -7,15 +7,33 @@
   version="2.0">
 
     <package>org.hibernate.test.annotations.reflection</package>
-    <entity class="dst1.model.Computer">
+    <entity class="dst1.model.Computer" name="Computer">
         <table name="Computer">
         	<unique-constraint>
         		<column-name>name</column-name>
         	</unique-constraint>
         </table>
-        <primary-key-join-column name="id"/>
         <attributes>
-        	<many-to-many name="executionList" target-entity="Execution" />
+        	<id name="id">
+        		<column name="id" unique="true" />
+        	</id>
+        	<basic name="name">
+        		<column name="name" unique="true" />
+        	</basic>
+        	<basic name="cpus">
+        		<column name="cpus" />
+        	</basic>
+        	<basic name="location">
+        		<column name="location" />
+        	</basic>
+        	<basic name="creation">
+        		<column name="creation" />
+        	</basic>
+        	<basic name="lastUpdate">
+        		<column name="lastUpdate" />
+        	</basic>
+        	<many-to-one name="cluster" target-entity="dst1.model.Cluster" />
+        	<many-to-many name="executionList" target-entity="dst1.model.Execution" />
         	
         </attributes>
     </entity>
