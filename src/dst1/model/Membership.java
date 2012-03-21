@@ -13,4 +13,23 @@ public class Membership {
 	private MembershipId id;
 	private Date registration;
 	private double discount;
+	
+	public MembershipId getId() {
+		return id;
+	}
+	public void setId(MembershipId id) {
+		this.id = id;
+	}
+	public Date getRegistration() {
+		return registration;
+	}
+	public void setRegistration(Date registration) {
+		this.registration = registration;
+	}
+	public double getDiscount() {
+		return discount;
+	}
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
 }

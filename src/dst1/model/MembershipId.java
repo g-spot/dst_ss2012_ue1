@@ -7,6 +7,11 @@ import javax.persistence.ManyToOne;
 
 @Embeddable
 public class MembershipId implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5394067147892943838L;
+	
 	@ManyToOne
 	private User user;
 	@ManyToOne
@@ -23,5 +28,16 @@ public class MembershipId implements Serializable {
 		return super.hashCode();
 	}
 	
-	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Grid getGrid() {
+		return grid;
+	}
+	public void setGrid(Grid grid) {
+		this.grid = grid;
+	}
 }

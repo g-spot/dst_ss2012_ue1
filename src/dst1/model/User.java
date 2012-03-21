@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -27,5 +24,53 @@ public class User extends Person {
 	
 	public User() {
 		this.membershipList = new ArrayList<Membership>();
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public byte[] getPassword() {
+		return password;
+	}
+
+	public void setPassword(byte[] password) {
+		this.password = password;
+	}
+
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
+	public String getBankCode() {
+		return bankCode;
+	}
+
+	public void setBankCode(String bankCode) {
+		this.bankCode = bankCode;
+	}
+
+	public List<Job> getJobList() {
+		return jobList;
+	}
+
+	public void setJobList(List<Job> jobList) {
+		this.jobList = jobList;
+	}
+
+	public List<Membership> getMembershipList() {
+		return membershipList;
+	}
+
+	public void setMembershipList(List<Membership> membershipList) {
+		this.membershipList = membershipList;
 	}
 }

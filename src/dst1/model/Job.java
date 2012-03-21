@@ -3,7 +3,6 @@ package dst1.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -22,4 +21,47 @@ public class Job {
 	private User user;
 	@OneToOne
 	private Execution execution;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public int getNumCpus() {
+		return numCpus;
+	}
+	public void setNumCpus(int numCpus) {
+		this.numCpus = numCpus;
+	}
+	public int getExecutionTime() {
+		return executionTime;
+	}
+	public void setExecutionTime(int executionTime) {
+		this.executionTime = executionTime;
+	}
+	public boolean isPaid() {
+		return isPaid;
+	}
+	public void setPaid(boolean isPaid) {
+		this.isPaid = isPaid;
+	}
+	public Environment getEnvironment() {
+		return environment;
+	}
+	public void setEnvironment(Environment environment) {
+		this.environment = environment;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Execution getExecution() {
+		return execution;
+	}
+	public void setExecution(Execution execution) {
+		this.execution = execution;
+	}
 }
