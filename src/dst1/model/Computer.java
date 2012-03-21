@@ -4,19 +4,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//@Entity
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import dst1.validator.CPUs;
+
 public class Computer {
-	//@Id
 	private Long id;
-	//@Column(unique=true)
+	@Size(min=5,max=25)
 	private String name;
+	@CPUs(min=4,max=8)
 	private int cpus;
+	@Pattern(regexp="[A-Z]{3}[-][A-Z]{3}[@][0-9]{4}")
 	private String location;
+	@Past
 	private Date creation;
+	@Past
 	private Date lastUpdate;
-	//@ManyToMany
 	private List<Execution> executionList;
-	//@ManyToOne
 	private Cluster cluster;
 	
 	public Computer() {
