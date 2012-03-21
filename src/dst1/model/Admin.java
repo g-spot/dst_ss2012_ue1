@@ -9,13 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Admin {
-	@Id
-	private Long id;
-	private String firstName;
-	private String lastName;
+public class Admin extends Person {
 	@OneToMany
 	private List<Cluster> clusterList;
-	@Embedded
-	private Address address;
 }
