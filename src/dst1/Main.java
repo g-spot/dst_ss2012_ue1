@@ -104,9 +104,13 @@ public class Main {
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 		
 		Date futureDate = new Date();
-		futureDate.setYear(2020);
 		Date pastDate = new Date();
-		pastDate.setYear(100);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(2020, 1, 1);
+		futureDate = calendar.getTime();
+		calendar.set(2010, 1, 1);
+		pastDate = calendar.getTime();
 		
 		Computer invalidComputer = new Computer();
 		invalidComputer.setCpus(10);
