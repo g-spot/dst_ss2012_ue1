@@ -29,16 +29,21 @@ public class Job {
 		this.id = id;
 	}
 	public int getNumCpus() {
+		int numCpus = 0;
+		if(this.execution == null)
+			return 0;
+		for(Computer computer:this.execution.getComputerList()) {
+			numCpus += computer.getCpus();
+		}
 		return numCpus;
 	}
-	public void setNumCpus(int numCpus) {
-		this.numCpus = numCpus;
-	}
 	public int getExecutionTime() {
-		return executionTime;
-	}
-	public void setExecutionTime(int executionTime) {
-		this.executionTime = executionTime;
+		if(this.execution == null)
+			return 0;
+		if(this.execution.getStart() == null || this.execution.getEnd() == null)
+			return 0;
+		
+		return (int)(this.execution.getEnd().getTime() - this.execution.getStart().getTime());
 	}
 	public boolean isPaid() {
 		return isPaid;
