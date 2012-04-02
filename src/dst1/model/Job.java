@@ -1,6 +1,7 @@
 package dst1.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -8,14 +9,19 @@ import javax.persistence.Transient;
 
 @Entity
 public class Job {
+	//TODO generated values überall einfügen
 	@Id
+	@GeneratedValue
 	private Long id;
+	@SuppressWarnings("unused")
 	@Transient
 	private int numCpus;
+	@SuppressWarnings("unused")
 	@Transient
 	private int executionTime;
 	private boolean isPaid;
-	@OneToOne
+	//TODO optionale beziehungen kennzeichnen (default: optional=true)
+	@OneToOne(optional=false)
 	private Environment environment;
 	@ManyToOne
 	private User user;

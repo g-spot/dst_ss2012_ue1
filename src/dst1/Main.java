@@ -1,5 +1,6 @@
 package dst1;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
@@ -28,10 +29,21 @@ public class Main {
 	public static void main(String[] args) {
 		logger = Logger.getLogger("dst_ss2012_ue1");
 		//dst01();
+		
+		User user = new User();
+		System.out.println("Password before: " + user.getPassword());
+		try {
+			user.setPassword("gerhard");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Password after: " + user.getPassword());
+		
 		dst02a();
 		dst02b();
 		dst02c();
-		dst03();
+		//dst03();
 		dst04a();
 		dst04b();
 		dst04c();

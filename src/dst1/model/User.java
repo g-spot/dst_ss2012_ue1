@@ -1,5 +1,7 @@
 package dst1.model;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +40,13 @@ public class User extends Person {
 		return password;
 	}
 
-	public void setPassword(byte[] password) {
-		this.password = password;
+	public void setPassword(String password) throws NoSuchAlgorithmException {
+		//TODO md5??????
+		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+		byte[] data = password.getBytes();
+		messageDigest.update(data, 0, data.length);
+		
+		this.password = data;
 	}
 
 	public String getAccountNo() {
@@ -73,4 +80,12 @@ public class User extends Person {
 	public void setMembershipList(List<Membership> membershipList) {
 		this.membershipList = membershipList;
 	}
+	
+	/*public static String MungPass(String pass) throws NoSuchAlgorithmException {
+		MessageDigest m = MessageDigest.getInstance("MD5");
+		byte[] data = pass.getBytes(); 
+		m.update(data,0,data.length);
+		BigInteger i = new BigInteger(1,m.digest());
+		return String.format("%1$032X", i);
+	}*/
 }
