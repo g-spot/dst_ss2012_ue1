@@ -9,7 +9,6 @@ import javax.persistence.Transient;
 
 @Entity
 public class Job {
-	//TODO generated values überall einfügen
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -20,12 +19,11 @@ public class Job {
 	@Transient
 	private int executionTime;
 	private boolean isPaid;
-	//TODO optionale beziehungen kennzeichnen (default: optional=true)
 	@OneToOne(optional=false)
 	private Environment environment;
-	@ManyToOne
+	@ManyToOne(optional=false)
 	private User user;
-	@OneToOne
+	@OneToOne(optional=false)
 	private Execution execution;
 	
 	public Long getId() {

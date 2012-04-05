@@ -4,7 +4,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -16,6 +20,7 @@ import javax.validation.Validator;
 
 
 
+import dst1.logging.MyConsoleFormatter;
 import dst1.model.*;
 
 public class Main {
@@ -28,9 +33,18 @@ public class Main {
 
 	public static void main(String[] args) {
 		logger = Logger.getLogger("dst_ss2012_ue1");
-		//dst01();
 		
-		User user = new User();
+		logger.setUseParentHandlers(false);
+		
+		ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new MyConsoleFormatter());
+		logger.addHandler(handler);
+		for(Handler h : logger.getHandlers()) {
+			System.out.println(h);
+		}
+		dst01();
+		
+		/*User user = new User();
 		System.out.println("Password before: " + user.getPassword());
 		try {
 			user.setPassword("gerhard");
@@ -39,6 +53,20 @@ public class Main {
 			e.printStackTrace();
 		}
 		System.out.println("Password after: " + user.getPassword());
+		
+		try {
+			if(user.comparePassword("gerhard"))
+				System.out.println("gerhard is OK");
+			else
+				System.out.println("gerhard ist NOT OK");
+			if(user.comparePassword("schraml"))
+				System.out.println("schraml is OK");
+			else
+				System.out.println("schraml ist NOT OK");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 		
 		dst02a();
 		dst02b();
@@ -61,15 +89,9 @@ public class Main {
 		EntityManager em = emf.createEntityManager();
 		
 		logger.info("Creating test admin");
-		Admin admin1 = new Admin();
-		admin1.setId(1l);
-		admin1.setFirstName("Gerhard");
-		admin1.setLastName("Schraml");
+		Admin admin1 = new Admin("Gerhard", "Schraml", null);
 		
-		Admin admin2 = new Admin();
-		admin2.setId(2l);
-		admin2.setFirstName("Max");
-		admin2.setLastName("Mustermann");
+		Admin admin2 = new Admin("Max", "Mustermann", new Address("Main Street 1", "Washington D.C.", "1234"));
 		
 		try {
 			em.getTransaction().begin();
@@ -79,14 +101,14 @@ public class Main {
 			
 			Admin admin = em.find(Admin.class, 1l);
 			if(admin != null)
-				logger.info("<" + admin.getId() + "><" + admin.getFirstName() + "><" + admin.getLastName() + ">");
+				logger.severe("<" + admin.getId() + "><" + admin.getFirstName() + "><" + admin.getLastName() + ">");
 			else
 				logger.info("Admin not found");
 			
 			Query query = em.createQuery("SELECT a FROM Admin a");
 			for(Object result : query.getResultList()) {
 				admin = (Admin)result;
-				logger.info("<" + admin.getId() + "><" + admin.getFirstName() + "><" + admin.getLastName() + ">");
+				logger.warning("<" + admin.getId() + "><" + admin.getFirstName() + "><" + admin.getLastName() + ">");
 			}
 			
 			em.getTransaction().commit();

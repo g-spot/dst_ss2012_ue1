@@ -16,6 +16,7 @@
         <attributes>
         	<id name="id">
         		<column name="id" unique="true" />
+        		<generated-value strategy="AUTO"/>
         	</id>
         	<basic name="name">
         		<column name="name" unique="true" />
@@ -32,7 +33,7 @@
         	<basic name="lastUpdate">
         		<column name="lastUpdate" />
         	</basic>
-        	<many-to-one name="cluster" target-entity="dst1.model.Cluster" />
+        	<many-to-one name="cluster" target-entity="dst1.model.Cluster" optional="false" />
         	<many-to-many name="executionList" target-entity="dst1.model.Execution" />
         	
         </attributes>

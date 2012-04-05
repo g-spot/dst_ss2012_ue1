@@ -7,8 +7,13 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class Admin extends Person {
+
 	@OneToMany
 	private List<Cluster> clusterList;
+	
+	public Admin(String firstName, String lastName, Address address) {
+		super(firstName, lastName, address);
+	}
 
 	public List<Cluster> getClusterList() {
 		return clusterList;

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -14,6 +15,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class Cluster {
 	@Id
+	@GeneratedValue
 	private Long id;
 	@Column(unique=true)
 	private String name;
@@ -22,15 +24,18 @@ public class Cluster {
 	@OneToMany
 	private List<Computer> computerList;
 	@ManyToMany
-	private List<Cluster> clusterList;
-	@ManyToOne
+	private List<Cluster> childClusterList;
+	@ManyToMany
+	private List<Cluster> parentClusterList;
+	@ManyToOne(optional=false)
 	private Grid grid;
 	@ManyToOne
 	private Admin admin;
 	
 	public Cluster() {
 		this.computerList = new ArrayList<Computer>();
-		this.clusterList = new ArrayList<Cluster>();
+		this.childClusterList = new ArrayList<Cluster>();
+		this.parentClusterList = new ArrayList<Cluster>();
 	}
 
 	public Long getId() {
@@ -73,12 +78,20 @@ public class Cluster {
 		this.computerList = computerList;
 	}
 
-	public List<Cluster> getClusterList() {
-		return clusterList;
+	public List<Cluster> getChildClusterList() {
+		return childClusterList;
 	}
 
-	public void setClusterList(List<Cluster> clusterList) {
-		this.clusterList = clusterList;
+	public void setChildClusterList(List<Cluster> childClusterList) {
+		this.childClusterList = childClusterList;
+	}
+	
+	public List<Cluster> getParentClusterList() {
+		return parentClusterList;
+	}
+
+	public void setParentClusterList(List<Cluster> parentClusterList) {
+		this.parentClusterList = parentClusterList;
 	}
 
 	public Grid getGrid() {

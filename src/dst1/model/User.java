@@ -16,6 +16,7 @@ import javax.persistence.UniqueConstraint;
 public class User extends Person {
 	@Column(unique=true,nullable=false)
 	private String username;
+	@Column(length=32, columnDefinition="BINARY(32)")
 	private byte[] password;
 	private String accountNo;
 	private String bankCode;
@@ -26,6 +27,10 @@ public class User extends Person {
 	
 	public User() {
 		this.membershipList = new ArrayList<Membership>();
+	}
+	
+	public User(String firstName, String lastName, Address address) {
+		super(firstName, lastName, address);
 	}
 
 	public String getUsername() {
@@ -41,12 +46,10 @@ public class User extends Person {
 	}
 
 	public void setPassword(String password) throws NoSuchAlgorithmException {
-		//TODO md5??????
 		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-		byte[] data = password.getBytes();
-		messageDigest.update(data, 0, data.length);
-		
-		this.password = data;
+		messageDigest.reset();
+		messageDigest.update(password.getBytes());
+		this.password = messageDigest.digest();
 	}
 
 	public String getAccountNo() {
@@ -81,11 +84,13 @@ public class User extends Person {
 		this.membershipList = membershipList;
 	}
 	
-	/*public static String MungPass(String pass) throws NoSuchAlgorithmException {
-		MessageDigest m = MessageDigest.getInstance("MD5");
-		byte[] data = pass.getBytes(); 
-		m.update(data,0,data.length);
-		BigInteger i = new BigInteger(1,m.digest());
-		return String.format("%1$032X", i);
-	}*/
+	public boolean comparePassword(String enteredPassword) throws NoSuchAlgorithmException {
+		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+		messageDigest.reset();
+		messageDigest.update(enteredPassword.getBytes());
+		
+		if(this.password.equals(messageDigest.digest()))
+			return true;
+		return false;
+	}
 }

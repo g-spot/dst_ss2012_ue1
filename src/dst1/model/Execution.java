@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
@@ -12,11 +13,12 @@ import javax.persistence.OneToOne;
 @Entity
 public class Execution {
 	@Id
+	@GeneratedValue
 	private Long id;
 	private Date start;
 	private Date end;
 	private JobStatus status;
-	@OneToOne
+	@OneToOne(optional=false)
 	private Job job;
 	@ManyToMany
 	private List<Computer> computerList;
