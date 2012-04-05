@@ -28,6 +28,14 @@ public class Grid {
 		this.membershipList = new ArrayList<Membership>();
 		this.clusterList = new ArrayList<Cluster>();
 	}
+	
+	public Grid(String name, String location, BigDecimal costPerCpuMinute) {
+		this.name = name;
+		this.location = location;
+		this.costPerCpuMinute = costPerCpuMinute;
+		this.membershipList = new ArrayList<Membership>();
+		this.clusterList = new ArrayList<Cluster>();
+	}
 
 	public Long getId() {
 		return id;
@@ -75,5 +83,14 @@ public class Grid {
 
 	public void setClusterList(List<Cluster> clusterList) {
 		this.clusterList = clusterList;
+	}
+
+	public void addCluster(Cluster cluster) {
+		if(clusterList == null)
+			clusterList = new ArrayList<Cluster>();
+		if(!clusterList.contains(cluster)) {
+			cluster.setGrid(this);
+			clusterList.add(cluster);
+		}
 	}
 }

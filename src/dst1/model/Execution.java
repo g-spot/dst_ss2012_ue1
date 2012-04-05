@@ -24,7 +24,6 @@ public class Execution {
 	private List<Computer> computerList;
 	
 	public Execution() {
-		this.computerList = new ArrayList<Computer>();
 	}
 
 	public Long getId() {
@@ -64,14 +63,24 @@ public class Execution {
 	}
 
 	public void setJob(Job job) {
+		job.setExecution(this);
 		this.job = job;
 	}
 
 	public List<Computer> getComputerList() {
 		return computerList;
 	}
-
+	
 	public void setComputerList(List<Computer> computerList) {
 		this.computerList = computerList;
+	}
+
+	public void addComputer(Computer computer) {
+		if(computerList == null)
+			computerList = new ArrayList<Computer>();
+		if(!computerList.contains(computer)) {
+			computer.addExecution(this);
+			computerList.add(computer);
+		}
 	}
 }

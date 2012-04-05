@@ -1,5 +1,6 @@
 package dst1.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -18,8 +19,17 @@ public class Admin extends Person {
 	public List<Cluster> getClusterList() {
 		return clusterList;
 	}
-
+	
 	public void setClusterList(List<Cluster> clusterList) {
 		this.clusterList = clusterList;
+	}
+
+	public void addCluster(Cluster cluster) {
+		if(clusterList == null)
+			clusterList = new ArrayList<Cluster>();
+		if(!clusterList.contains(cluster)) {
+			cluster.setAdmin(this);
+			clusterList.add(cluster);
+		}
 	}
 }

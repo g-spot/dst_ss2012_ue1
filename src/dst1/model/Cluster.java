@@ -29,10 +29,19 @@ public class Cluster {
 	private List<Cluster> parentClusterList;
 	@ManyToOne(optional=false)
 	private Grid grid;
-	@ManyToOne
+	@ManyToOne(optional=false)
 	private Admin admin;
 	
 	public Cluster() {
+		this.computerList = new ArrayList<Computer>();
+		this.childClusterList = new ArrayList<Cluster>();
+		this.parentClusterList = new ArrayList<Cluster>();
+	}
+	
+	public Cluster(String name, Date lastService, Date nextService) {
+		this.name = name;
+		this.lastService = lastService;
+		this.nextService = nextService;
 		this.computerList = new ArrayList<Computer>();
 		this.childClusterList = new ArrayList<Cluster>();
 		this.parentClusterList = new ArrayList<Cluster>();
@@ -74,24 +83,38 @@ public class Cluster {
 		return computerList;
 	}
 
-	public void setComputerList(List<Computer> computerList) {
-		this.computerList = computerList;
+	public void addComputer(Computer computer) {
+		if(computerList == null)
+			computerList = new ArrayList<Computer>();
+		if(!computerList.contains(computer)) {
+			computer.setCluster(this);
+			computerList.add(computer);
+		}
 	}
 
 	public List<Cluster> getChildClusterList() {
 		return childClusterList;
 	}
 
-	public void setChildClusterList(List<Cluster> childClusterList) {
-		this.childClusterList = childClusterList;
+	public void addChildCluster(Cluster cluster) {
+		if(childClusterList == null)
+			childClusterList = new ArrayList<Cluster>();
+		if(!childClusterList.contains(cluster)) {
+			cluster.addParentCluster(this);
+			childClusterList.add(cluster);
+		}
 	}
 	
 	public List<Cluster> getParentClusterList() {
 		return parentClusterList;
 	}
 
-	public void setParentClusterList(List<Cluster> parentClusterList) {
-		this.parentClusterList = parentClusterList;
+	public void addParentCluster(Cluster cluster) {
+		if(parentClusterList == null)
+			parentClusterList = new ArrayList<Cluster>();
+		if(!parentClusterList.contains(cluster)) {
+			parentClusterList.add(cluster);
+		}
 	}
 
 	public Grid getGrid() {
@@ -108,5 +131,17 @@ public class Cluster {
 
 	public void setAdmin(Admin admin) {
 		this.admin = admin;
+	}
+
+	public void setComputerList(List<Computer> computerList) {
+		this.computerList = computerList;
+	}
+
+	public void setChildClusterList(List<Cluster> childClusterList) {
+		this.childClusterList = childClusterList;
+	}
+
+	public void setParentClusterList(List<Cluster> parentClusterList) {
+		this.parentClusterList = parentClusterList;
 	}
 }

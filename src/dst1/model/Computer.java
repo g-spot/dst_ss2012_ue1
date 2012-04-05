@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import dst1.validator.CPUs;
 
 public class Computer {
+
 	private Long id;
 	@Size(min=5,max=25)
 	private String name;
@@ -27,6 +28,14 @@ public class Computer {
 	
 	public Computer() {
 		this.executionList = new ArrayList<Execution>();
+	}
+	
+	public Computer(String name, int cpus, String location, Date creation, Date lastUpdate) {
+		this.name = name;
+		this.cpus = cpus;
+		this.location = location;
+		this.creation = creation;
+		this.lastUpdate = lastUpdate;
 	}
 
 	public Long getId() {
@@ -80,9 +89,15 @@ public class Computer {
 	public List<Execution> getExecutionList() {
 		return executionList;
 	}
-
+	
 	public void setExecutionList(List<Execution> executionList) {
 		this.executionList = executionList;
+	}
+
+	public void addExecution(Execution execution) {
+		if(executionList == null)
+			executionList = new ArrayList<Execution>();
+		executionList.add(execution);
 	}
 
 	public Cluster getCluster() {

@@ -29,8 +29,12 @@ public class User extends Person {
 		this.membershipList = new ArrayList<Membership>();
 	}
 	
-	public User(String firstName, String lastName, Address address) {
+	public User(String firstName, String lastName, String username, String password, String accountNo, String bankCode, Address address) throws NoSuchAlgorithmException {
 		super(firstName, lastName, address);
+		this.username = username;
+		this.setPassword(password);
+		this.accountNo = accountNo;
+		this.bankCode = bankCode;
 	}
 
 	public String getUsername() {
@@ -72,8 +76,13 @@ public class User extends Person {
 		return jobList;
 	}
 
-	public void setJobList(List<Job> jobList) {
-		this.jobList = jobList;
+	public void addJob(Job job) {
+		if(jobList == null)
+			jobList = new ArrayList<Job>();
+		if(!jobList.contains(job)) {
+			job.setUser(this);
+			jobList.add(job);
+		}
 	}
 
 	public List<Membership> getMembershipList() {

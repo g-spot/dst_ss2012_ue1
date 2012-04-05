@@ -1,5 +1,6 @@
 package dst1;
 
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,16 +33,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		logger = Logger.getLogger("dst_ss2012_ue1");
-		
-		logger.setUseParentHandlers(false);
-		
-		ConsoleHandler handler = new ConsoleHandler();
-		handler.setFormatter(new MyConsoleFormatter());
-		logger.addHandler(handler);
-		for(Handler h : logger.getHandlers()) {
-			System.out.println(h);
-		}
+		initLogging();
 		dst01();
 		
 		/*User user = new User();
@@ -87,19 +79,97 @@ public class Main {
 		logger.info("Creating entity manager");
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("grid");
 		EntityManager em = emf.createEntityManager();
+		logger.info("Done.");
 		
-		logger.info("Creating test admin");
-		Admin admin1 = new Admin("Gerhard", "Schraml", null);
+		logger.info("Creating domain objects...");
 		
-		Admin admin2 = new Admin("Max", "Mustermann", new Address("Main Street 1", "Washington D.C.", "1234"));
+		// create administrators
+		Admin admin1 = new Admin("Albert", "Auer", new Address("Hauptstra§e 1", "Wien", "1100"));
+		Admin admin2 = new Admin("Bertram", "Becker", new Address("Hauptstra§e 2", "Wien", "1100"));
+		Admin admin3 = new Admin("Christoph", "Cerny", new Address("Hauptstra§e 3", "Wien", "1100"));
+		Admin admin4 = new Admin("Daniel", "DŸsentrieb", new Address("Hauptstra§e 4", "Wien", "1100"));
+		
+		// create users
+		User user1 = null, user2 = null, user3 = null, user4 = null;
+		try {
+			user1 = new User("Erwin", "Ehrenreich", "erwin1", "erwin1", "100", "60000", new Address("Hauptstra§e 5", "Wien", "1100"));
+			user2 = new User("Fritz", "FŸrchterlich", "fritz1", "fritz1", "200", "60000", new Address("Hauptstra§e 6", "Wien", "1100"));
+			user3 = new User("Gerhard", "Gruselglatz", "gerhard1", "gerhard1", "300", "60000", new Address("Hauptstra§e 7", "Wien", "1100"));
+			user4 = new User("Harald", "Heidelberger", "harald1", "harald1", "400", "60000", new Address("Hauptstra§e 8", "Wien", "1100"));
+		} catch (NoSuchAlgorithmException e1) {
+			logger.severe(e1.getMessage());
+		}
+		
+		// create grid
+		Grid grid1 = new Grid("Grid Vienna", "Vienna", new BigDecimal(0.5));
+		Grid grid2 = new Grid("Grid Munich", "Munich", new BigDecimal(0.7));
+		
+		// create clusters
+		Cluster cluster1 = new Cluster("Cluster 1", null, null);
+		Cluster cluster2 = new Cluster("Cluster 2", null, null);
+		Cluster cluster3 = new Cluster("Cluster 3", null, null);
+		Cluster cluster4 = new Cluster("Cluster 4", null, null);
+		grid1.addCluster(cluster1);
+		grid1.addCluster(cluster3);
+		grid1.addCluster(cluster4);
+		grid2.addCluster(cluster2);
+		admin1.addCluster(cluster1);
+		admin2.addCluster(cluster2);
+		admin3.addCluster(cluster3);
+		admin4.addCluster(cluster4);
+		
+		// create computers
+		Date date = new Date();
+		Computer computer1 = new Computer("Computer Vienna Wieden", 2, "AUT-VIE@1040", date, date);
+		Computer computer2 = new Computer("Computer Munich", 4, "GER-MUN@1234", date, date);
+		Computer computer3 = new Computer("Computer Vienna Favoriten", 6, "AUT-VIE@1100", date, date);
+		Computer computer4 = new Computer("Computer Vienna Margareten", 8, "AUT-VIE@1050", date, date);
+		cluster1.addComputer(computer1);
+		cluster1.addComputer(computer3);
+		cluster2.addComputer(computer2);
+		cluster4.addComputer(computer4);
+		
+		logger.info("Done.");
 		
 		try {
+			logger.info("Starting transaction...");
 			em.getTransaction().begin();
+			logger.info("Done.");
 			
+			logger.info("Persisting administrators...");
 			em.persist(admin1);
 			em.persist(admin2);
+			em.persist(admin3);
+			em.persist(admin4);
+			logger.info("Done.");
 			
-			Admin admin = em.find(Admin.class, 1l);
+			logger.info("Persisting users...");
+			em.persist(user1);
+			em.persist(user2);
+			em.persist(user3);
+			em.persist(user4);
+			logger.info("Done.");
+			
+			logger.info("Persisting grids...");
+			em.persist(grid1);
+			em.persist(grid2);
+			logger.info("Done.");
+			
+			logger.info("Persisting clusters...");
+			em.persist(cluster1);
+			em.persist(cluster2);
+			em.persist(cluster3);
+			em.persist(cluster4);
+			logger.info("Done.");
+			
+			logger.info("Persisting computers...");
+			em.persist(computer1);
+			em.persist(computer2);
+			em.persist(computer3);
+			em.persist(computer4);
+			logger.info("Done.");
+			
+			/*Admin admin = em.find(Admin.class, 1l);
 			if(admin != null)
 				logger.severe("<" + admin.getId() + "><" + admin.getFirstName() + "><" + admin.getLastName() + ">");
 			else
@@ -109,9 +179,11 @@ public class Main {
 			for(Object result : query.getResultList()) {
 				admin = (Admin)result;
 				logger.warning("<" + admin.getId() + "><" + admin.getFirstName() + "><" + admin.getLastName() + ">");
-			}
+			}*/
 			
+			logger.info("Committing transaction...");
 			em.getTransaction().commit();
+			logger.info("Done.");
 		} catch(Exception e) {
 			em.getTransaction().rollback();
 			logger.severe(e.getMessage());
@@ -214,4 +286,12 @@ public class Main {
         public static void dst05c() {
 
         }
+        
+    private static void initLogging() {
+		logger = Logger.getLogger("dst_ss2012_ue1");
+		logger.setUseParentHandlers(false);
+		ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new MyConsoleFormatter());
+		logger.addHandler(handler);
+    }
 }
