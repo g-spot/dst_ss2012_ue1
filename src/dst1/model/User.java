@@ -22,7 +22,7 @@ public class User extends Person {
 	private String bankCode;
 	@OneToMany
 	private List<Job> jobList;
-	@OneToMany
+	@OneToMany(mappedBy="id.user")
 	private List<Membership> membershipList;
 	
 	public User() {

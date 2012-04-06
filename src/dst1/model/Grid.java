@@ -20,7 +20,7 @@ public class Grid {
 	private String name;
 	private String location;
 	private BigDecimal costPerCpuMinute;
-	@OneToMany
+	@OneToMany(mappedBy="id.grid")
 	private List<Membership> membershipList;
 	@OneToMany
 	private List<Cluster> clusterList;

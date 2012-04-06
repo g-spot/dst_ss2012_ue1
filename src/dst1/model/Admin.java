@@ -9,7 +9,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class Admin extends Person {
 
-	@OneToMany
+	@OneToMany(mappedBy="admin")
 	private List<Cluster> clusterList;
 	
 	public Admin(String firstName, String lastName, Address address) {
