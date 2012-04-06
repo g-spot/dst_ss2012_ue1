@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,9 +22,9 @@ public class Cluster {
 	private String name;
 	private Date lastService;
 	private Date nextService;
-	@OneToMany(mappedBy="cluster")
+	@OneToMany(mappedBy="cluster", cascade={CascadeType.REMOVE})
 	private List<Computer> computerList;
-	@ManyToMany(mappedBy="parentClusterList")
+	@ManyToMany(mappedBy="parentClusterList", cascade={CascadeType.REMOVE})
 	private List<Cluster> childClusterList;
 	@ManyToMany
 	private List<Cluster> parentClusterList;
@@ -89,6 +90,13 @@ public class Cluster {
 		if(!computerList.contains(computer)) {
 			computer.setCluster(this);
 			computerList.add(computer);
+		}
+	}
+	
+	public void removeComputer(Computer computer) {
+		if(computerList != null && computerList.contains(computer)) {
+			computer.setCluster(null);
+			computerList.remove(computer);
 		}
 	}
 

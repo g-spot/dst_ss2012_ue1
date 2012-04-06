@@ -13,11 +13,11 @@ import javax.persistence.InheritanceType;
 public abstract class Person {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
-	private Long id;
-	private String firstName;
-	private String lastName;
+	protected Long id;
+	protected String firstName;
+	protected String lastName;
 	@Embedded
-	private Address address;
+	protected Address address;
 	
 	public Person() {
 		

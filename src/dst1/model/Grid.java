@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,9 +21,9 @@ public class Grid {
 	private String name;
 	private String location;
 	private BigDecimal costPerCpuMinute;
-	@OneToMany(mappedBy="id.grid")
+	@OneToMany(mappedBy="id.grid", cascade={CascadeType.REMOVE})
 	private List<Membership> membershipList;
-	@OneToMany(mappedBy="grid")
+	@OneToMany(mappedBy="grid", cascade={CascadeType.REMOVE})
 	private List<Cluster> clusterList;
 	
 	public Grid() {
@@ -100,5 +101,26 @@ public class Grid {
 			membershipList = new ArrayList<Membership>();
 		if(!membershipList.contains(membership))
 			membershipList.add(membership);
+	}
+	
+	@Override
+	public String toString() {
+		String value = "[Grid id=" + id + ", " +
+					"name=" + name + ", " +
+					"location=" + location + ", " + 
+					"costPerCpuMinute=" + costPerCpuMinute + ", " + 
+					"clusterList={";
+		for(Cluster cluster:clusterList) {
+			value += cluster.getId() + ",";
+		}
+		value = value.substring(0, value.length() - 1);
+		value += "}, ";
+		value +=	"membershiplist={";
+		for(Membership membership:membershipList) {
+			value += "(U" + membership.getId().getUser().getId() + ",G" + membership.getId().getGrid().getId() + "),";
+		}
+		value = value.substring(0, value.length() - 1);
+		value += "}]";
+		return value;
 	}
 }

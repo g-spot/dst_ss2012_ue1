@@ -1,5 +1,6 @@
 package dst1.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ public class Job {
 	@Transient
 	private int executionTime;
 	
-	@OneToOne(optional=false)
+	@OneToOne(optional=false, cascade={CascadeType.REMOVE})
 	private Environment environment;
 	@ManyToOne(optional=false)
 	private User user;

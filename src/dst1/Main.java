@@ -131,7 +131,7 @@ public class Main {
 		Computer computer3 = new Computer("Computer Vienna Favoriten", 6, "AUT-VIE@1100", date, date);
 		Computer computer4 = new Computer("Computer Vienna Margareten", 8, "AUT-VIE@1050", date, date);
 		cluster1.addComputer(computer1);
-		cluster1.addComputer(computer3);
+		cluster2.addComputer(computer3);
 		cluster2.addComputer(computer2);
 		cluster4.addComputer(computer4);
 		
@@ -227,15 +227,6 @@ public class Main {
 			em.persist(membership4);
 			logger.info("Done.");
 			
-			logger.info(job1.getExecution().toString());
-			logger.info(job2.getExecution().toString());
-			logger.info(job3.getExecution().toString());
-			logger.info(job4.getExecution().toString());
-			logger.info(execution1.getJob().toString());
-			logger.info(execution2.getJob().toString());
-			logger.info(execution3.getJob().toString());
-			logger.info(execution4.getJob().toString());
-			
 			logger.info("Persisting environments...");
 			em.persist(environment1);
 			em.persist(environment2);
@@ -244,10 +235,6 @@ public class Main {
 			logger.info("Done.");
 			
 			logger.info("Persisting jobs...");
-			logger.info(job1.toString());
-			logger.info(job2.toString());
-			logger.info(job3.toString());
-			logger.info(job4.toString());
 			em.persist(job1);
 			em.persist(job2);
 			em.persist(job3);
@@ -261,8 +248,30 @@ public class Main {
 			em.persist(execution4);
 			logger.info("Done.");
 			
+			// delete execution1
+			// computers first have to be removed from the executions computerList - they should not be deleted
+			// deletion of execution1 causes cascading removal of job1, which causes cascading removal of environment1
+			logger.info("Removing " + execution1);
+			execution1.removeAllComputers();
+			em.remove(execution1);
+			logger.info("Done.");
 			
+			// delete computer 2
+			// computers are automatically removed from the executions computerLists
+			logger.info("Removing " + computer2);
+			em.remove(computer2);
+			logger.info("Done.");
 			
+			// delete admin 3
+			// deletion of admin3 causes the deletion of all associated clusters and child clusters with all their computers
+			logger.info("Removing " + admin3);
+			em.remove(admin3);
+			logger.info("Done.");
+			
+			// delete grid 1
+			logger.info("Removing " + grid1);
+			em.remove(grid1);
+			logger.info("Done.");
 			
 			
 			/*Admin admin = em.find(Admin.class, 1l);
@@ -281,6 +290,7 @@ public class Main {
 			em.getTransaction().commit();
 			logger.info("Done.");
 		} catch(Exception e) {
+			e.printStackTrace();
 			em.getTransaction().rollback();
 			logger.severe(e.getMessage());
 		}

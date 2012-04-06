@@ -3,6 +3,7 @@ package dst1.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
@@ -99,6 +100,19 @@ public class Computer {
 			executionList = new ArrayList<Execution>();
 		executionList.add(execution);
 	}
+	
+	public void removeExecution(Execution execution) {
+		if(executionList != null)
+			executionList.remove(execution);
+	}
+	
+	public void removeAllExecutions() {
+		for(Execution execution:executionList) {
+			if(execution.getComputerList() != null)
+				execution.getComputerList().remove(this);
+		}
+		executionList.clear();
+	}
 
 	public Cluster getCluster() {
 		return cluster;
@@ -106,5 +120,28 @@ public class Computer {
 
 	public void setCluster(Cluster cluster) {
 		this.cluster = cluster;
+	}
+	
+	public void removeCluster(Cluster cluster) {
+		if(cluster != null)
+			cluster.removeComputer(this);
+	}
+	
+	@Override
+	public String toString() {
+		String value = "[Computer id=" + id + ", " +
+					"name=" + name + ", " +
+					"cpus=" + cpus + ", " + 
+					"location=" + location + ", " + 
+					"creation=" + creation + ", " +
+					"lastUpdate=" + lastUpdate + ", " + 
+					"cluster=" + (cluster != null ? cluster.getId() : null) + ", " +
+					"executionList={";
+		for(Execution execution:executionList) {
+			value += execution.getId() + ",";
+		}
+		value = value.substring(0, value.length() - 1);
+		value += "}]";
+		return value;
 	}
 }
