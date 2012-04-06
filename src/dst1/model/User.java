@@ -93,6 +93,13 @@ public class User extends Person {
 		this.membershipList = membershipList;
 	}
 	
+	public void addMembership(Membership membership) {
+		if(membershipList == null)
+			membershipList = new ArrayList<Membership>();
+		if(!membershipList.contains(membership))
+			membershipList.add(membership);
+	}
+	
 	public boolean comparePassword(String enteredPassword) throws NoSuchAlgorithmException {
 		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 		messageDigest.reset();

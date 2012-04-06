@@ -14,6 +14,17 @@ public class Membership {
 	private Date registration;
 	private double discount;
 	
+	public Membership(Grid grid, User user, Date registration, double discount) {
+		if(grid != null)
+			grid.addMembership(this);
+		if(user != null)
+			user.addMembership(this);
+		
+		this.id = new MembershipId(grid, user);
+		this.registration = registration;
+		this.discount = discount;
+	}
+	
 	public MembershipId getId() {
 		return id;
 	}

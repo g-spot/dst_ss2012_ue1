@@ -17,6 +17,11 @@ public class MembershipId implements Serializable {
 	@ManyToOne
 	private Grid grid;
 	
+	public MembershipId(Grid grid, User user) {
+		this.grid = grid;
+		this.user = user;
+	}
+	
 	@Override
 	public boolean equals(Object arg0) {
 		// TODO Auto-generated method stub

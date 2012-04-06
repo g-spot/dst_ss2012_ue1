@@ -97,12 +97,17 @@ public class Main {
 			user3 = new User("Gerhard", "Gruselglatz", "gerhard1", "gerhard1", "300", "60000", new Address("Hauptstra§e 7", "Wien", "1100"));
 			user4 = new User("Harald", "Heidelberger", "harald1", "harald1", "400", "60000", new Address("Hauptstra§e 8", "Wien", "1100"));
 		} catch (NoSuchAlgorithmException e1) {
-			logger.severe(e1.getMessage());
+			logger.severe("Missing md5 algorithm");
 		}
 		
-		// create grid
+		// create grids
 		Grid grid1 = new Grid("Grid Vienna", "Vienna", new BigDecimal(0.5));
 		Grid grid2 = new Grid("Grid Munich", "Munich", new BigDecimal(0.7));
+		
+		Membership membership1 = new Membership(grid1, user1, new Date(), 0.1);
+		Membership membership2 = new Membership(grid1, user2, new Date(), 0.2);
+		Membership membership3 = new Membership(grid2, user3, new Date(), 0.3);
+		Membership membership4 = new Membership(grid1, user4, new Date(), 0.4);
 		
 		// create clusters
 		Cluster cluster1 = new Cluster("Cluster 1", null, null);
@@ -167,6 +172,13 @@ public class Main {
 			em.persist(computer2);
 			em.persist(computer3);
 			em.persist(computer4);
+			logger.info("Done.");
+			
+			logger.info("Persisting memberships...");
+			em.persist(membership1);
+			em.persist(membership2);
+			em.persist(membership3);
+			em.persist(membership4);
 			logger.info("Done.");
 			
 			/*Admin admin = em.find(Admin.class, 1l);

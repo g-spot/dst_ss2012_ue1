@@ -2,6 +2,7 @@ package dst1.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -92,5 +93,12 @@ public class Grid {
 			cluster.setGrid(this);
 			clusterList.add(cluster);
 		}
+	}
+	
+	public void addMembership(Membership membership) {
+		if(membershipList == null)
+			membershipList = new ArrayList<Membership>();
+		if(!membershipList.contains(membership))
+			membershipList.add(membership);
 	}
 }
