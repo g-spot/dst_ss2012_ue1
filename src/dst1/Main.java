@@ -13,6 +13,7 @@ import java.util.logging.SimpleFormatter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
@@ -134,6 +135,51 @@ public class Main {
 		cluster2.addComputer(computer2);
 		cluster4.addComputer(computer4);
 		
+		cluster3.addChildCluster(cluster4);
+		cluster1.addChildCluster(cluster3);
+		
+		// create environments
+		Environment environment1 = new Environment("Workflow 1");
+		Environment environment2 = new Environment("Workflow 2");
+		Environment environment3 = new Environment("Workflow 3");
+		Environment environment4 = new Environment("Workflow 4");
+		environment1.addParam("param1");
+		environment1.addParam("param2");
+		environment2.addParam("param3");
+		environment2.addParam("param4");
+		environment3.addParam("param5");
+		environment3.addParam("param6");
+		environment4.addParam("param7");
+		environment4.addParam("param8");
+		
+		// create jobs
+		Job job1 = new Job(true);
+		Job job2 = new Job(false);
+		Job job3 = new Job(true);
+		Job job4 = new Job(false);
+		job1.setEnvironment(environment1);
+		job2.setEnvironment(environment2);
+		job3.setEnvironment(environment3);
+		job4.setEnvironment(environment4);
+		user1.addJob(job1);
+		user2.addJob(job2);
+		user3.addJob(job3);
+		user4.addJob(job4);
+		
+		// create executions
+		Execution execution1 = new Execution(new Date(), null, JobStatus.RUNNING);
+		Execution execution2 = new Execution(new Date(), null, JobStatus.SCHEDULED);
+		Execution execution3 = new Execution(new Date(), new Date(), JobStatus.FAILED);
+		Execution execution4 = new Execution(new Date(), new Date(), JobStatus.FINISHED);
+		execution1.setJob(job1);
+		execution2.setJob(job2);
+		execution3.setJob(job3);
+		execution4.setJob(job4);
+		execution1.addComputer(computer1);
+		execution2.addComputer(computer2);
+		execution3.addComputer(computer3);
+		execution4.addComputer(computer4);
+		
 		logger.info("Done.");
 		
 		try {
@@ -180,6 +226,44 @@ public class Main {
 			em.persist(membership3);
 			em.persist(membership4);
 			logger.info("Done.");
+			
+			logger.info(job1.getExecution().toString());
+			logger.info(job2.getExecution().toString());
+			logger.info(job3.getExecution().toString());
+			logger.info(job4.getExecution().toString());
+			logger.info(execution1.getJob().toString());
+			logger.info(execution2.getJob().toString());
+			logger.info(execution3.getJob().toString());
+			logger.info(execution4.getJob().toString());
+			
+			logger.info("Persisting environments...");
+			em.persist(environment1);
+			em.persist(environment2);
+			em.persist(environment3);
+			em.persist(environment4);
+			logger.info("Done.");
+			
+			logger.info("Persisting jobs...");
+			logger.info(job1.toString());
+			logger.info(job2.toString());
+			logger.info(job3.toString());
+			logger.info(job4.toString());
+			em.persist(job1);
+			em.persist(job2);
+			em.persist(job3);
+			em.persist(job4);
+			logger.info("Done.");
+			
+			logger.info("Persisting executions...");
+			em.persist(execution1);
+			em.persist(execution2);
+			em.persist(execution3);
+			em.persist(execution4);
+			logger.info("Done.");
+			
+			
+			
+			
 			
 			/*Admin admin = em.find(Admin.class, 1l);
 			if(admin != null)

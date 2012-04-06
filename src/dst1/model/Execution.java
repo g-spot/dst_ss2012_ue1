@@ -20,10 +20,13 @@ public class Execution {
 	private JobStatus status;
 	@OneToOne(optional=false)
 	private Job job;
-	@ManyToMany
+	@ManyToMany(mappedBy="executionList")
 	private List<Computer> computerList;
 	
-	public Execution() {
+	public Execution(Date start, Date end, JobStatus status) {
+		this.start = start;
+		this.end = end;
+		this.status = status;
 	}
 
 	public Long getId() {

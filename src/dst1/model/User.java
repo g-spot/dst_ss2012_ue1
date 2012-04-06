@@ -20,7 +20,7 @@ public class User extends Person {
 	private byte[] password;
 	private String accountNo;
 	private String bankCode;
-	@OneToMany
+	@OneToMany(mappedBy="user")
 	private List<Job> jobList;
 	@OneToMany(mappedBy="id.user")
 	private List<Membership> membershipList;

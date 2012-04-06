@@ -3,6 +3,7 @@ package dst1.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +18,8 @@ public class Environment {
 	@ElementCollection
 	private List<String> params;
 	
-	public Environment() {
-		this.params = new ArrayList<String>();
+	public Environment(String workflow) {
+		this.workflow = workflow;
 	}
 
 	public Long getId() {
@@ -43,5 +44,11 @@ public class Environment {
 
 	public void setParams(List<String> params) {
 		this.params = params;
+	}
+	
+	public void addParam(String param) {
+		if(params == null)
+			params = new ArrayList<String>();
+		params.add(param);
 	}
 }

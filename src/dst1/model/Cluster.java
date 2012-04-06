@@ -21,9 +21,9 @@ public class Cluster {
 	private String name;
 	private Date lastService;
 	private Date nextService;
-	@OneToMany
+	@OneToMany(mappedBy="cluster")
 	private List<Computer> computerList;
-	@ManyToMany
+	@ManyToMany(mappedBy="parentClusterList")
 	private List<Cluster> childClusterList;
 	@ManyToMany
 	private List<Cluster> parentClusterList;

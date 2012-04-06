@@ -1,5 +1,6 @@
 package dst1.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,19 +13,27 @@ public class Job {
 	@Id
 	@GeneratedValue
 	private Long id;
+	
+	@Column
+	private boolean isPaid;
+	
 	@SuppressWarnings("unused")
 	@Transient
 	private int numCpus;
 	@SuppressWarnings("unused")
 	@Transient
 	private int executionTime;
-	private boolean isPaid;
+	
 	@OneToOne(optional=false)
 	private Environment environment;
 	@ManyToOne(optional=false)
 	private User user;
-	@OneToOne(optional=false)
+	@OneToOne(optional=false, mappedBy="job")
 	private Execution execution;
+	
+	public Job(boolean isPaid) {
+		this.isPaid = isPaid;
+	}
 	
 	public Long getId() {
 		return id;
@@ -72,5 +81,16 @@ public class Job {
 	}
 	public void setExecution(Execution execution) {
 		this.execution = execution;
+	}
+	
+	@Override
+	public String toString() {
+		return  "[Job id=" + id + ", " +
+				"numCpus=" + getNumCpus() + ", " +
+				"executionTime=" + getExecutionTime() + ", " +
+				"isPaid=" + isPaid + ", " +
+				"user=" + (user != null ? user.getId() : "n.a.") + ", " +
+				"execution=" + (execution != null ? execution.getId() : "n.a.") + ", " +
+				"environment=" + (environment != null ? environment.getId() : "n.a.") + "]";
 	}
 }

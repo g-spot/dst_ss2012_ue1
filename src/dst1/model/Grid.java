@@ -22,7 +22,7 @@ public class Grid {
 	private BigDecimal costPerCpuMinute;
 	@OneToMany(mappedBy="id.grid")
 	private List<Membership> membershipList;
-	@OneToMany
+	@OneToMany(mappedBy="grid")
 	private List<Cluster> clusterList;
 	
 	public Grid() {
