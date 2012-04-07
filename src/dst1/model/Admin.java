@@ -41,10 +41,12 @@ public class Admin extends Person {
 					"lastName=" + lastName + ", " + 
 					"address=" + address + ", " + 
 					"clusterList={";
-		for(Cluster cluster:clusterList) {
-			value += cluster.getId() + ",";
+		if(clusterList != null && !clusterList.isEmpty()) {
+			for(Cluster cluster:clusterList) {
+				value += cluster.getId() + ",";
+			}
+			value = value.substring(0, value.length() - 1);
 		}
-		value = value.substring(0, value.length() - 1);
 		value += "}]";
 		return value;
 	}

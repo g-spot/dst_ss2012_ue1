@@ -110,15 +110,18 @@ public class Grid {
 					"location=" + location + ", " + 
 					"costPerCpuMinute=" + costPerCpuMinute + ", " + 
 					"clusterList={";
-		for(Cluster cluster:clusterList) {
-			value += cluster.getId() + ",";
+		if(clusterList != null && !clusterList.isEmpty()) {
+			for(Cluster cluster:clusterList) {
+				value += cluster.getId() + ",";
+			}
+			value = value.substring(0, value.length() - 1);
 		}
-		value = value.substring(0, value.length() - 1);
 		value += "}, ";
 		value +=	"membershiplist={";
-		for(Membership membership:membershipList) {
-			value += "(U" + membership.getId().getUser().getId() + ",G" + membership.getId().getGrid().getId() + "),";
-		}
+		if(membershipList != null)
+			for(Membership membership:membershipList) {
+				value += "(U" + membership.getId().getUser().getId() + ",G" + membership.getId().getGrid().getId() + "),";
+			}
 		value = value.substring(0, value.length() - 1);
 		value += "}]";
 		return value;

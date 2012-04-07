@@ -111,10 +111,12 @@ public class Execution {
 					"status=" + status + ", " + 
 					"job=" + (job != null ? job.getId() : null) + ", " +
 					"computerList={";
-		for(Computer computer:computerList) {
-			value += computer.getId() + ",";
+		if(computerList != null && !computerList.isEmpty()) {
+			for(Computer computer:computerList) {
+				value += computer.getId() + ",";
+			}
+			value = value.substring(0, value.length() - 1);
 		}
-		value = value.substring(0, value.length() - 1);
 		value += "}]";
 		return value;
 	}

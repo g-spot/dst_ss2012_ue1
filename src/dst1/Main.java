@@ -28,6 +28,7 @@ import dst1.model.*;
 public class Main {
 	
 	private static Logger logger;
+	private static EntityManager em;
 
 	private Main() {
 		super();
@@ -35,6 +36,12 @@ public class Main {
 
 	public static void main(String[] args) {
 		initLogging();
+		
+		logger.info("Creating entity manager");
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("grid");
+		em = emf.createEntityManager();
+		logger.info("Done.");
+		
 		dst01();
 		
 		/*User user = new User();
@@ -77,11 +84,6 @@ public class Main {
 	public static void dst01() {
 		logger.info("Starting dst01()");
 		
-		logger.info("Creating entity manager");
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("grid");
-		EntityManager em = emf.createEntityManager();
-		logger.info("Done.");
-		
 		logger.info("Creating domain objects...");
 		
 		// create administrators
@@ -89,6 +91,7 @@ public class Main {
 		Admin admin2 = new Admin("Bertram", "Becker", new Address("Hauptstra§e 2", "Wien", "1100"));
 		Admin admin3 = new Admin("Christoph", "Cerny", new Address("Hauptstra§e 3", "Wien", "1100"));
 		Admin admin4 = new Admin("Daniel", "DŸsentrieb", new Address("Hauptstra§e 4", "Wien", "1100"));
+		Admin admin5 = new Admin("Ignaz", "Ibertsberger", new Address("Jakominiplatz 1", "Graz", "8020"));
 		
 		// create users
 		User user1 = null, user2 = null, user3 = null, user4 = null;
@@ -104,6 +107,7 @@ public class Main {
 		// create grids
 		Grid grid1 = new Grid("Grid Vienna", "Vienna", new BigDecimal(0.5));
 		Grid grid2 = new Grid("Grid Munich", "Munich", new BigDecimal(0.7));
+		Grid grid3 = new Grid("Grid Graz", "Graz", new BigDecimal(0.3));
 		
 		Membership membership1 = new Membership(grid1, user1, new Date(), 0.1);
 		Membership membership2 = new Membership(grid1, user2, new Date(), 0.2);
@@ -115,14 +119,20 @@ public class Main {
 		Cluster cluster2 = new Cluster("Cluster 2", null, null);
 		Cluster cluster3 = new Cluster("Cluster 3", null, null);
 		Cluster cluster4 = new Cluster("Cluster 4", null, null);
+		Cluster cluster5 = new Cluster("Cluster 5", null, null);
+		Cluster cluster6 = new Cluster("Cluster 6", null, null);
 		grid1.addCluster(cluster1);
 		grid1.addCluster(cluster3);
 		grid1.addCluster(cluster4);
 		grid2.addCluster(cluster2);
+		grid3.addCluster(cluster5);
+		grid3.addCluster(cluster6);
 		admin1.addCluster(cluster1);
 		admin2.addCluster(cluster2);
 		admin3.addCluster(cluster3);
 		admin4.addCluster(cluster4);
+		admin5.addCluster(cluster5);
+		admin5.addCluster(cluster6);
 		
 		// create computers
 		Date date = new Date();
@@ -130,10 +140,14 @@ public class Main {
 		Computer computer2 = new Computer("Computer Munich", 4, "GER-MUN@1234", date, date);
 		Computer computer3 = new Computer("Computer Vienna Favoriten", 6, "AUT-VIE@1100", date, date);
 		Computer computer4 = new Computer("Computer Vienna Margareten", 8, "AUT-VIE@1050", date, date);
+		Computer computer5 = new Computer("Computer Graz Andritz", 6, "AUT-GRA@8040", date, date);
+		Computer computer6 = new Computer("Computer Graz Jakomini", 8, "AUT-GRA@8020", date, date);
 		cluster1.addComputer(computer1);
 		cluster2.addComputer(computer3);
 		cluster2.addComputer(computer2);
 		cluster4.addComputer(computer4);
+		cluster5.addComputer(computer5);
+		cluster5.addComputer(computer6);
 		
 		cluster3.addChildCluster(cluster4);
 		cluster1.addChildCluster(cluster3);
@@ -192,6 +206,7 @@ public class Main {
 			em.persist(admin2);
 			em.persist(admin3);
 			em.persist(admin4);
+			em.persist(admin5);
 			logger.info("Done.");
 			
 			logger.info("Persisting users...");
@@ -204,6 +219,7 @@ public class Main {
 			logger.info("Persisting grids...");
 			em.persist(grid1);
 			em.persist(grid2);
+			em.persist(grid3);
 			logger.info("Done.");
 			
 			logger.info("Persisting clusters...");
@@ -211,6 +227,8 @@ public class Main {
 			em.persist(cluster2);
 			em.persist(cluster3);
 			em.persist(cluster4);
+			em.persist(cluster5);
+			em.persist(cluster6);
 			logger.info("Done.");
 			
 			logger.info("Persisting computers...");
@@ -218,6 +236,8 @@ public class Main {
 			em.persist(computer2);
 			em.persist(computer3);
 			em.persist(computer4);
+			em.persist(computer5);
+			em.persist(computer6);
 			logger.info("Done.");
 			
 			logger.info("Persisting memberships...");
@@ -272,6 +292,7 @@ public class Main {
 			logger.info("Removing " + grid1);
 			em.remove(grid1);
 			logger.info("Done.");
+			
 			
 			
 			/*Admin admin = em.find(Admin.class, 1l);
@@ -370,7 +391,48 @@ public class Main {
 	}
 
 	public static void dst04b() {
-
+		logger.info("Starting dst04b()");
+		
+		Computer computer = new Computer();
+		
+		try {
+			logger.info("Starting transaction...");
+			em.getTransaction().begin();
+			logger.info("Done.");
+		
+			Computer computer5 = em.find(Computer.class, 5l);
+			logger.info("Computer 5 lastUpdate before persist(): " + computer5.getLastUpdate());
+			
+			try {
+				logger.info("Sleeping for 3 seconds...");
+				Thread.sleep(3000);
+				logger.info("Done.");
+			} catch(InterruptedException e) {
+			}
+			
+			logger.info("Updating name of computer 5...");
+			computer5.setName("New name of computer 5");
+			em.persist(computer5);
+			logger.info("Done.");
+			
+			em.getTransaction().commit();
+			
+			logger.info("Starting transaction...");
+			em.getTransaction().begin();
+			logger.info("Done.");
+			
+			Computer updated = em.find(Computer.class, 5l);
+			logger.info("Computer 5 lastUpdate after persist(): " + updated.getLastUpdate());
+			
+			em.getTransaction().commit();
+		
+			
+		} catch(Exception e) {
+			em.getTransaction().rollback();
+			logger.severe(e.getMessage());
+		}
+		
+		logger.info("Finished dst04b()");
 	}
 
 	public static void dst04c() {

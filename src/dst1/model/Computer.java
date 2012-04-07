@@ -5,12 +5,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.persistence.EntityListeners;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import dst1.validator.CPUs;
 
+@EntityListeners(dst1.listener.ComputerListener.class)
 public class Computer {
 
 	private Long id;
@@ -137,10 +139,12 @@ public class Computer {
 					"lastUpdate=" + lastUpdate + ", " + 
 					"cluster=" + (cluster != null ? cluster.getId() : null) + ", " +
 					"executionList={";
-		for(Execution execution:executionList) {
-			value += execution.getId() + ",";
+		if(executionList != null && !executionList.isEmpty()) {
+			for(Execution execution:executionList) {
+				value += execution.getId() + ",";
+			}
+			value = value.substring(0, value.length() - 1);
 		}
-		value = value.substring(0, value.length() - 1);
 		value += "}]";
 		return value;
 	}
