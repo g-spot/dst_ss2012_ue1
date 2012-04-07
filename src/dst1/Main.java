@@ -22,6 +22,7 @@ import javax.validation.Validator;
 
 
 
+import dst1.listener.DefaultListener;
 import dst1.logging.MyConsoleFormatter;
 import dst1.model.*;
 
@@ -436,7 +437,9 @@ public class Main {
 	}
 
 	public static void dst04c() {
-
+		logger.info("Starting dst04c()");
+		logger.info(DefaultListener.getAccessStatistics());
+		logger.info("Finished dst04c()");
 	}
 
 	public static void dst04d() {
