@@ -23,6 +23,7 @@ import javax.validation.Validator;
 
 
 
+import dst1.interceptor.SQLInterceptor;
 import dst1.listener.DefaultListener;
 import dst1.logging.MyConsoleFormatter;
 import dst1.model.*;
@@ -500,6 +501,14 @@ public class Main {
 
 	public static void dst04d() {
 		logger.info("=============== Starting dst04d() ===============");
+		logger.info("Statistics before counter reset:");
+		logger.info(SQLInterceptor.getStatistics());
+		SQLInterceptor.resetCounter();
+		logger.info("Statistics after counter reset:");
+		logger.info(SQLInterceptor.getStatistics());
+		dst02b();
+		logger.info("Statistics after calling dst02b():");
+		logger.info(SQLInterceptor.getStatistics());
 		logger.info("=============== Finished dst04d() ===============");
 	}
 
