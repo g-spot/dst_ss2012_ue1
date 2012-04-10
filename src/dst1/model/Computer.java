@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import javax.persistence.EntityListeners;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -13,6 +14,10 @@ import javax.validation.constraints.Size;
 import dst1.validator.CPUs;
 
 @EntityListeners(dst1.listener.ComputerListener.class)
+@NamedQuery(name="findComputersInVienna",
+			query="SELECT OBJECT(c) " + 
+				  "  FROM Computer c " + 
+				  " WHERE c.location LIKE 'AUT-VIE%'")
 public class Computer {
 
 	private Long id;

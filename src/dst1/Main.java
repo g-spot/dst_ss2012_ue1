@@ -144,9 +144,13 @@ public class Main {
 		Computer computer4 = new Computer("Computer Vienna Margareten", 8, "AUT-VIE@1050", date, date);
 		Computer computer5 = new Computer("Computer Graz Andritz", 6, "AUT-GRA@8040", date, date);
 		Computer computer6 = new Computer("Computer Graz Jakomini", 8, "AUT-GRA@8020", date, date);
+		Computer computer7 = new Computer("Computer Vienna Landstra§e", 4, "AUT-VIE@1030", date, date);
+		Computer computer8 = new Computer("Computer Vienna Simmering", 6, "AUT-VIE@1110", date, date);
 		cluster1.addComputer(computer1);
 		cluster2.addComputer(computer3);
 		cluster2.addComputer(computer2);
+		cluster2.addComputer(computer7);
+		cluster2.addComputer(computer8);
 		cluster4.addComputer(computer4);
 		cluster5.addComputer(computer5);
 		cluster5.addComputer(computer6);
@@ -202,6 +206,10 @@ public class Main {
 		execution3.addComputer(computer3);
 		execution4.addComputer(computer4);
 		execution5.addComputer(computer4);
+		execution1.addComputer(computer7);
+		execution2.addComputer(computer7);
+		execution3.addComputer(computer8);
+		execution4.addComputer(computer8);
 		
 		logger.info("Done.");
 		
@@ -247,6 +255,8 @@ public class Main {
 			em.persist(computer4);
 			em.persist(computer5);
 			em.persist(computer6);
+			em.persist(computer7);
+			em.persist(computer8);
 			logger.info("Done.");
 			
 			logger.info("Persisting memberships...");
@@ -341,28 +351,34 @@ public class Main {
 			Query queryUsersOfGridByJobCount = em.createNamedQuery("findUsersOfGridByJobCount");
 			queryUsersOfGridByJobCount.setParameter("nameOfGrid", gridName);
 			queryUsersOfGridByJobCount.setParameter("jobCount", jobCount);
-			List<User> users = queryUsersOfGridByJobCount.getResultList();
-			for(User user : users) {
-				logger.info("User: " + user);
-			}
-			if(users.isEmpty())
-				logger.info("Result list is empty.");
+			displayQueryResults(queryUsersOfGridByJobCount);
 		}
 		
 		logger.info("Querying most active users...");
 		Query queryMostActiveUsers = em.createNamedQuery("findMostActiveUsers");
-		List<User> users = queryMostActiveUsers.getResultList();
-		for(User user : users) {
-			logger.info("User: " + user);
-		}
-		if(users.isEmpty())
-			logger.info("Result list is empty.");
+		displayQueryResults(queryMostActiveUsers);
 		
 		logger.info("=============== Finished dst02a() ===============");
 	}
 
 	public static void dst02b() {
 		logger.info("=============== Starting dst02b() ===============");
+		
+		logger.info("Querying computers in vienna...");
+		Query queryComputersInVienna = em.createNamedQuery("findComputersInVienna");
+		displayQueryResults(queryComputersInVienna);
+		List<Computer> computers = queryComputersInVienna.getResultList();
+		for(Computer computer : computers) {
+			long totalUsage = 0;
+			for(Execution execution : computer.getExecutionList()) {
+				Date endDate = (execution.getEnd() == null ? new Date() : execution.getEnd());
+				if(execution.getStart() != null) {
+					totalUsage += (endDate.getTime() - execution.getStart().getTime());
+				}
+			}
+			logger.info("Computer id=" + computer.getId() + " has total usage of " + totalUsage + " ms.");
+		}
+		
 		logger.info("=============== Finished dst02b() ===============");
 	}
 
@@ -508,5 +524,17 @@ public class Main {
 		ConsoleHandler handler = new ConsoleHandler();
 		handler.setFormatter(new MyConsoleFormatter());
 		logger.addHandler(handler);
+    }
+    
+    private static void displayQueryResults(Query query) {
+    	List<Object> resultList = query.getResultList();
+    	int i = 0;
+    	if(resultList.isEmpty())
+    		logger.info("  Result list is empty.");
+    	else
+			for(Object result : resultList) {
+				logger.info("  Row #" + i + " " + result);
+				i++;
+			}
     }
 }

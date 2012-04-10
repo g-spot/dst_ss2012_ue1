@@ -10,9 +10,10 @@ public class MyConsoleFormatter extends Formatter {
 	@Override
 	public String format(LogRecord rec) {
 		StringBuffer buffer = new StringBuffer(1000);
+		String sourceMethodName = (rec.getSourceMethodName().equals("displayQueryResults") ? "" : rec.getSourceMethodName());
 		buffer.append("(" + calcDate(rec.getMillis()) + ")");
 		buffer.append(" ");
-		buffer.append("(" + rec.getSourceMethodName() + ")" + whitespaces(rec.getSourceMethodName(), 6));
+		buffer.append("(" + sourceMethodName + ")" + whitespaces(sourceMethodName, 6));
 		buffer.append(" ");
 		buffer.append("(" + rec.getLevel().getName() + ")" + whitespaces(rec.getLevel().getName(), 8));
 		//buffer.append(" ");
