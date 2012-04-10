@@ -6,10 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
+@NamedQuery(name="findJobsByStatus",
+			query="SELECT OBJECT(j) " +
+				  "  FROM Job j " + 
+				  " WHERE j.execution.status=:jobStatus")
 public class Job {
 	@Id
 	@GeneratedValue

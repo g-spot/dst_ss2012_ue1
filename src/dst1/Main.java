@@ -1,6 +1,7 @@
 package dst1;
 
 import java.math.BigDecimal;
+import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +22,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
 
 
 import dst1.interceptor.SQLInterceptor;
@@ -32,6 +40,8 @@ public class Main {
 	
 	private static Logger logger;
 	private static EntityManager em;
+	private static Mongo mongo;
+	private static DB mongoDB;
 
 	private Main() {
 		super();
@@ -40,10 +50,21 @@ public class Main {
 	public static void main(String[] args) {
 		initLogging();
 		
-		logger.info("Creating entity manager");
+		logger.info("Creating entity manager...");
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("grid");
 		em = emf.createEntityManager();
 		logger.info("Done.");
+		
+		logger.info("Connecting to MongoDB...");
+		try {
+			mongo = new Mongo("localhost", 27017);
+			mongoDB = mongo.getDB("dst");
+			logger.info("Done.");
+		} catch (UnknownHostException e) {
+			logger.severe("Not able to connect to MongoDB: " + e.getMessage());
+		} catch (MongoException e) {
+			logger.severe("Not able to connect to MongoDB: " + e.getMessage());
+		}
 		
 		dst01();
 		
@@ -512,20 +533,56 @@ public class Main {
 		logger.info("=============== Finished dst04d() ===============");
 	}
 
-        public static void dst05a() {
-        	logger.info("=============== Starting dst05a() ===============");
-    		logger.info("=============== Finished dst05a() ===============");
-        }
+    public static void dst05a() {
+    	logger.info("=============== Starting dst05a() ===============");
+    	
+    	logger.info("Querying finished Jobs...");
+		Query queryJobsByStatus = em.createNamedQuery("findJobsByStatus");
+		queryJobsByStatus.setParameter("jobStatus", JobStatus.FINISHED);
+		List<Job> finishedJobs = queryJobsByStatus.getResultList();
+		
+		DBCollection collection = mongoDB.getCollection("finishedJobs");
+		
+		for(Job job:finishedJobs) {
+			logger.info(job.toString());
+			BasicDBObject document = new BasicDBObject();
+			document.put("job_id", job.getId());
+			document.put("last_updated", new Date().getTime());
+			collection.insert(document);
+		}
+		
+    	
+    	Set<String> colls = mongoDB.getCollectionNames();
 
-        public static void dst05b() {
-        	logger.info("=============== Starting dst05b() ===============");
-    		logger.info("=============== Finished dst05b() ===============");
-        }
+    	for (String s : colls) {
+    	    System.out.println(s);
+    	}
+		logger.info("=============== Finished dst05a() ===============");
+    }
 
-        public static void dst05c() {
-        	logger.info("=============== Starting dst05c() ===============");
-    		logger.info("=============== Finished dst05c() ===============");
-        }
+    public static void dst05b() {
+    	logger.info("=============== Starting dst05b() ===============");
+    	
+    	
+    	logger.info("Querying job with id=5...");
+    	DBCollection collection = mongoDB.getCollection("finishedJobs");
+    	BasicDBObject pattern = new BasicDBObject();
+    	pattern.put("job_id", 5);
+    	
+    	DBObject job5 = collection.findOne(pattern);
+    	
+    	if(job5 == null)
+    		logger.info("Job not found.");
+    	else
+    		logger.info(job5.toString());
+    	
+		logger.info("=============== Finished dst05b() ===============");
+    }
+
+    public static void dst05c() {
+    	logger.info("=============== Starting dst05c() ===============");
+		logger.info("=============== Finished dst05c() ===============");
+    }
         
     private static void initLogging() {
 		logger = Logger.getLogger("dst_ss2012_ue1");
