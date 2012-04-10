@@ -12,7 +12,9 @@ public class MyConsoleFormatter extends Formatter {
 		StringBuffer buffer = new StringBuffer(1000);
 		buffer.append("(" + calcDate(rec.getMillis()) + ")");
 		buffer.append(" ");
-		buffer.append("(" + rec.getLevel().getName() + ")" + whitespaces(rec.getLevel().getName()));
+		buffer.append("(" + rec.getSourceMethodName() + ")" + whitespaces(rec.getSourceMethodName(), 6));
+		buffer.append(" ");
+		buffer.append("(" + rec.getLevel().getName() + ")" + whitespaces(rec.getLevel().getName(), 8));
 		//buffer.append(" ");
 		buffer.append(rec.getMessage() + "\n");
 		return buffer.toString();
@@ -25,10 +27,9 @@ public class MyConsoleFormatter extends Formatter {
 		return date_format.format(resultdate);
 	}
 	
-	private String whitespaces(String level) {
-		int MAX_LENGTH = 8;
+	private String whitespaces(String level, int maxLength) {
 		String whitespaces = "";
-		for(int i=level.length();i<MAX_LENGTH;i++) {
+		for(int i=level.length();i<maxLength;i++) {
 			whitespaces += " ";
 		}
 		return whitespaces;

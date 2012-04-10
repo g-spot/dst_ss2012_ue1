@@ -83,7 +83,7 @@ public class Main {
 	}
 
 	public static void dst01() {
-		logger.info("Starting dst01()");
+		logger.info("=============== Starting dst01() ===============");
 		
 		logger.info("Creating domain objects...");
 		
@@ -317,23 +317,26 @@ public class Main {
 			logger.severe(e.getMessage());
 		}
 
-		logger.info("Finished dst01()");
+		logger.info("=============== Finished dst01() ===============");
 	}
 
 	public static void dst02a() {
-
+		logger.info("=============== Starting dst02a() ===============");
+		logger.info("=============== Finished dst02a() ===============");
 	}
 
 	public static void dst02b() {
-
+		logger.info("=============== Starting dst02b() ===============");
+		logger.info("=============== Finished dst02b() ===============");
 	}
 
 	public static void dst02c() {
-
+		logger.info("=============== Starting dst02c() ===============");
+		logger.info("=============== Finished dst02c() ===============");
 	}
 
 	public static void dst03() {
-		logger.info("Starting dst03()");
+		logger.info("=============== Starting dst03() ===============");
 		
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 		
@@ -384,15 +387,16 @@ public class Main {
 		else
 			logger.info("No violations found.");
 		
-		logger.info("Finished dst03()");
+		logger.info("=============== Finished dst03() ===============");
 	}
 
 	public static void dst04a() {
-
+		logger.info("=============== Starting dst04a() ===============");
+		logger.info("=============== Finished dst04a() ===============");
 	}
 
 	public static void dst04b() {
-		logger.info("Starting dst04b()");
+		logger.info("=============== Starting dst04b() ===============");
 		
 		Computer computer = new Computer();
 		
@@ -433,29 +437,33 @@ public class Main {
 			logger.severe(e.getMessage());
 		}
 		
-		logger.info("Finished dst04b()");
+		logger.info("=============== Finished dst04b() ===============");
 	}
 
 	public static void dst04c() {
-		logger.info("Starting dst04c()");
+		logger.info("=============== Starting dst04c() ===============");
 		logger.info(DefaultListener.getAccessStatistics());
-		logger.info("Finished dst04c()");
+		logger.info("=============== Finished dst04c() ===============");
 	}
 
 	public static void dst04d() {
-
+		logger.info("=============== Starting dst04d() ===============");
+		logger.info("=============== Finished dst04d() ===============");
 	}
 
         public static void dst05a() {
-
+        	logger.info("=============== Starting dst05a() ===============");
+    		logger.info("=============== Finished dst05a() ===============");
         }
 
         public static void dst05b() {
-
+        	logger.info("=============== Starting dst05b() ===============");
+    		logger.info("=============== Finished dst05b() ===============");
         }
 
         public static void dst05c() {
-
+        	logger.info("=============== Starting dst05c() ===============");
+    		logger.info("=============== Finished dst05c() ===============");
         }
         
     private static void initLogging() {
