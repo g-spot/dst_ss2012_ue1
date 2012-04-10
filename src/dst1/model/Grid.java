@@ -120,7 +120,8 @@ public class Grid {
 		value +=	"membershiplist={";
 		if(membershipList != null)
 			for(Membership membership:membershipList) {
-				value += "(U" + membership.getId().getUser().getId() + ",G" + membership.getId().getGrid().getId() + "),";
+				//value += "(U" + membership.getId().getUser().getId() + ",G" + membership.getId().getGrid().getId() + "),";
+				value += membership.getId().toString() + ",";
 			}
 		value = value.substring(0, value.length() - 1);
 		value += "}]";

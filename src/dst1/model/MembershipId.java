@@ -65,4 +65,9 @@ public class MembershipId implements Serializable {
 	public void setGrid(Grid grid) {
 		this.grid = grid;
 	}
+	
+	@Override
+	public String toString() {
+		return "(U" + (user != null ? user.getId() : "?") + ",G" + (grid != null ? grid.getId() : "?") + ")";
+	}
 }

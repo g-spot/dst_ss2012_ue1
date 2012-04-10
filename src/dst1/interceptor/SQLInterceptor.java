@@ -9,6 +9,7 @@ public class SQLInterceptor extends EmptyInterceptor {
 	public String onPrepareStatement(String sql) {
 		
 		// TODO
+		//System.out.println(sql);
 
 		return sql;
 	}

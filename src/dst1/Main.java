@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -74,7 +75,7 @@ public class Main {
 		dst02c();
 		//dst03();
 		dst04a();
-		dst04b();
+		//dst04b();
 		dst04c();
 		dst04d();
 		dst05a();
@@ -113,7 +114,7 @@ public class Main {
 		Membership membership1 = new Membership(grid1, user1, new Date(), 0.1);
 		Membership membership2 = new Membership(grid1, user2, new Date(), 0.2);
 		Membership membership3 = new Membership(grid2, user3, new Date(), 0.3);
-		Membership membership4 = new Membership(grid1, user4, new Date(), 0.4);
+		Membership membership4 = new Membership(grid2, user4, new Date(), 0.4);
 		
 		// create clusters
 		Cluster cluster1 = new Cluster("Cluster 1", null, null);
@@ -158,6 +159,7 @@ public class Main {
 		Environment environment2 = new Environment("Workflow 2");
 		Environment environment3 = new Environment("Workflow 3");
 		Environment environment4 = new Environment("Workflow 4");
+		Environment environment5 = new Environment("Workflow 5");
 		environment1.addParam("param1");
 		environment1.addParam("param2");
 		environment2.addParam("param3");
@@ -172,13 +174,16 @@ public class Main {
 		Job job2 = new Job(false);
 		Job job3 = new Job(true);
 		Job job4 = new Job(false);
+		Job job5 = new Job(false);
 		job1.setEnvironment(environment1);
 		job2.setEnvironment(environment2);
 		job3.setEnvironment(environment3);
 		job4.setEnvironment(environment4);
+		job5.setEnvironment(environment5);
 		user1.addJob(job1);
 		user2.addJob(job2);
 		user3.addJob(job3);
+		user3.addJob(job5);
 		user4.addJob(job4);
 		
 		// create executions
@@ -186,14 +191,17 @@ public class Main {
 		Execution execution2 = new Execution(new Date(), null, JobStatus.SCHEDULED);
 		Execution execution3 = new Execution(new Date(), new Date(), JobStatus.FAILED);
 		Execution execution4 = new Execution(new Date(), new Date(), JobStatus.FINISHED);
+		Execution execution5 = new Execution(new Date(), new Date(), JobStatus.FINISHED);
 		execution1.setJob(job1);
 		execution2.setJob(job2);
 		execution3.setJob(job3);
 		execution4.setJob(job4);
+		execution5.setJob(job5);
 		execution1.addComputer(computer1);
 		execution2.addComputer(computer2);
 		execution3.addComputer(computer3);
 		execution4.addComputer(computer4);
+		execution5.addComputer(computer4);
 		
 		logger.info("Done.");
 		
@@ -253,6 +261,7 @@ public class Main {
 			em.persist(environment2);
 			em.persist(environment3);
 			em.persist(environment4);
+			em.persist(environment5);
 			logger.info("Done.");
 			
 			logger.info("Persisting jobs...");
@@ -260,6 +269,7 @@ public class Main {
 			em.persist(job2);
 			em.persist(job3);
 			em.persist(job4);
+			em.persist(job5);
 			logger.info("Done.");
 			
 			logger.info("Persisting executions...");
@@ -267,6 +277,7 @@ public class Main {
 			em.persist(execution2);
 			em.persist(execution3);
 			em.persist(execution4);
+			em.persist(execution5);
 			logger.info("Done.");
 			
 			// delete execution1
@@ -322,6 +333,31 @@ public class Main {
 
 	public static void dst02a() {
 		logger.info("=============== Starting dst02a() ===============");
+		
+		String gridName = "Grid Munich";
+		
+		for(long jobCount = 0l; jobCount <= 2; jobCount++) {
+			logger.info("Querying users of grid '" + gridName + "' with at least " + jobCount + " job(s) assigned...");
+			Query queryUsersOfGridByJobCount = em.createNamedQuery("findUsersOfGridByJobCount");
+			queryUsersOfGridByJobCount.setParameter("nameOfGrid", gridName);
+			queryUsersOfGridByJobCount.setParameter("jobCount", jobCount);
+			List<User> users = queryUsersOfGridByJobCount.getResultList();
+			for(User user : users) {
+				logger.info("User: " + user);
+			}
+			if(users.isEmpty())
+				logger.info("Result list is empty.");
+		}
+		
+		logger.info("Querying most active users...");
+		Query queryMostActiveUsers = em.createNamedQuery("findMostActiveUsers");
+		List<User> users = queryMostActiveUsers.getResultList();
+		for(User user : users) {
+			logger.info("User: " + user);
+		}
+		if(users.isEmpty())
+			logger.info("Result list is empty.");
+		
 		logger.info("=============== Finished dst02a() ===============");
 	}
 

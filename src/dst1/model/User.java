@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -15,6 +17,24 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"accountNo","bankCode"}))
+@NamedQueries({
+@NamedQuery(name="findUsersOfGridByJobCount",
+			query="SELECT DISTINCT OBJECT(u) " +
+				   " FROM User u JOIN u.membershipList m JOIN m.id.grid g " +
+				   "WHERE g.name = :nameOfGrid " +
+				   "  AND (SELECT COUNT(DISTINCT j) " + 
+				   "		 FROM Job j JOIN j.execution.computerList c" +
+				   "        WHERE c.cluster.grid = g" +
+				   "          AND j.user = u) >= :jobCount"),
+@NamedQuery(name="findMostActiveUsers",
+			query="SELECT DISTINCT OBJECT(u) " + 
+				  "  FROM User u JOIN u.jobList j " + 
+				  " GROUP BY u " + 
+				  "   HAVING COUNT(j) >= ALL " +
+				  "          (SELECT COUNT(j2) " +
+				  "             FROM User u2 JOIN u2.jobList j2" + 
+				  "            GROUP BY u2)")
+})
 public class User extends Person {
 	@Column(unique=true,nullable=false)
 	private String username;
@@ -110,5 +130,32 @@ public class User extends Person {
 		if(this.password.equals(messageDigest.digest()))
 			return true;
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		String value = "[User id=" + id + ", " +
+					"firstName=" + firstName + ", " +
+					"lastName=" + lastName + ", " + 
+					"address=" + address + ", " + 
+					"accountNo=" + accountNo + ", " + 
+					"bankCode=" + bankCode + ", " +
+					"membershipList={";
+		if(membershipList != null && !membershipList.isEmpty()) {
+			for(Membership membership:membershipList) {
+				value += membership.getId() + ",";
+			}
+			value = value.substring(0, value.length() - 1);
+		}
+		value += "}, ";
+		value +=	"jobList={";
+		if(jobList != null && !jobList.isEmpty()) {
+			for(Job job:jobList) {
+				value += job.getId() + ",";
+			}
+			value = value.substring(0, value.length() - 1);
+		}
+		value += "}]";
+		return value;
 	}
 }
