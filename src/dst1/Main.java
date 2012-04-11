@@ -100,9 +100,9 @@ public class Main {
 		dst02a();
 		dst02b();
 		dst02c();
-		//dst03();
+		dst03();
 		dst04a();
-		//dst04b();
+		dst04b();
 		dst04c();
 		dst04d();
 		dst05a();
@@ -372,20 +372,6 @@ public class Main {
 			em.remove(grid1);
 			logger.info("Done.");
 			
-			
-			
-			/*Admin admin = em.find(Admin.class, 1l);
-			if(admin != null)
-				logger.severe("<" + admin.getId() + "><" + admin.getFirstName() + "><" + admin.getLastName() + ">");
-			else
-				logger.info("Admin not found");
-			
-			Query query = em.createQuery("SELECT a FROM Admin a");
-			for(Object result : query.getResultList()) {
-				admin = (Admin)result;
-				logger.warning("<" + admin.getId() + "><" + admin.getFirstName() + "><" + admin.getLastName() + ">");
-			}*/
-			
 			logger.info("Committing transaction...");
 			em.getTransaction().commit();
 			logger.info("Done.");
@@ -501,6 +487,48 @@ public class Main {
 
 	public static void dst04a() {
 		logger.info("=============== Starting dst04a() ===============");
+		
+		// Possible states of the persistence lifecycle:
+		//  - NEW
+		//  - MANAGED
+		//  - REMOVED
+		//  - DETACHED
+		
+		logger.info("Starting transaction...");
+		em.getTransaction().begin();
+		logger.info("Done.");
+		
+		// newly created entities job, environment and execution are is in state NEW
+		// the entity manager does not know about existence of the entities
+		Job job = new Job(true);
+		Environment environment = new Environment("Some workflow");
+		Execution execution = new Execution(new Date(), null, JobStatus.SCHEDULED);		
+		
+		// retrieved user is in the state MANAGED
+		User user = em.find(User.class, 8l);
+		
+		// add mandatory associations
+		user.addJob(job);
+		execution.setJob(job);
+		job.setEnvironment(environment);
+		
+		// after persisting the new entities are in state MANAGED
+		em.persist(user);
+		em.persist(environment);
+		em.persist(job);
+		em.persist(execution);
+		
+		// after the remove operation (and before closing the entity manager or
+		// committing the transaciton) all objects are in state REMOVED
+		// deleting the execution entity causes cascading deletion of the job and environment entity
+		em.remove(execution);
+		
+		// if the entity manager gets claused, all managed objects are in state DETACHED
+		// em.close();
+		
+		em.getTransaction().commit();
+		
+		
 		logger.info("=============== Finished dst04a() ===============");
 	}
 

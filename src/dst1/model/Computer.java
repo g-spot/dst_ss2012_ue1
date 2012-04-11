@@ -16,8 +16,9 @@ import dst1.validator.CPUs;
 @EntityListeners(dst1.listener.ComputerListener.class)
 @NamedQuery(name="findComputersInVienna",
 			query="SELECT OBJECT(c) " + 
-				  "  FROM Computer c " + 
-				  " WHERE c.location LIKE 'AUT-VIE%'")
+				  "  FROM Computer c LEFT JOIN FETCH c.executionList " + 
+				  " WHERE c.location LIKE 'AUT-VIE%' " +
+				  " GROUP BY c")
 public class Computer {
 
 	private Long id;

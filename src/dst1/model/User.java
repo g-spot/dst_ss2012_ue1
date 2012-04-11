@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Index;
+
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"accountNo","bankCode"}))
@@ -39,6 +41,7 @@ public class User extends Person {
 	@Column(unique=true,nullable=false)
 	private String username;
 	@Column(length=32, columnDefinition="BINARY(32)")
+	@Index(name = "idx_user_password")
 	private byte[] password;
 	private String accountNo;
 	private String bankCode;
