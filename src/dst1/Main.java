@@ -39,6 +39,7 @@ import dst1.interceptor.SQLInterceptor;
 import dst1.listener.DefaultListener;
 import dst1.logging.MyConsoleFormatter;
 import dst1.model.*;
+import dst1.query.JobQueries;
 
 public class Main {
 	
@@ -427,6 +428,26 @@ public class Main {
 
 	public static void dst02c() {
 		logger.info("=============== Starting dst02c() ===============");
+		
+		logger.info("Query jobs of user gerhard1, no restriction for workflow name:");
+		List<Job> jobsByUsername = JobQueries.findJobsByUserAndWorkflow(em, "gerhard1", null);
+		for(Job job:jobsByUsername) {
+			logger.info(job.toString());
+		}
+		
+		logger.info("Query jobs of user 'gerhard1' and workflow name 'Workflow 3':");
+		List<Job> jobsByUsernameAndWorkflow = JobQueries.findJobsByUserAndWorkflow(em, "gerhard1", "Workflow 3");
+		for(Job job:jobsByUsernameAndWorkflow) {
+			logger.info(job.toString());
+		}
+		
+		logger.info("Query all finished jobs:");
+		List<Job> allFinishedJobs = JobQueries.findFinishedJobsByStartAndEndDate(em, null, null);
+		for(Job job:allFinishedJobs) {
+			logger.info(job.toString());
+			//logger.info("  " + job.getExecution().toString());
+		}
+		
 		logger.info("=============== Finished dst02c() ===============");
 	}
 
@@ -523,7 +544,9 @@ public class Main {
 		// deleting the execution entity causes cascading deletion of the job and environment entity
 		em.remove(execution);
 		
-		// if the entity manager gets claused, all managed objects are in state DETACHED
+		// if the entity manager gets closed, all managed objects are in state DETACHED
+		// it is also possible to detach single entities manually by calling em.detach(object);
+		// the objects then aren't managed by the entity manager any more
 		// em.close();
 		
 		em.getTransaction().commit();
