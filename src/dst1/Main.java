@@ -3,6 +3,7 @@ package dst1;
 import java.math.BigDecimal;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.validation.Validator;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -59,6 +61,7 @@ public class Main {
 		try {
 			mongo = new Mongo("localhost", 27017);
 			mongoDB = mongo.getDB("dst");
+			mongoDB.dropDatabase();
 			logger.info("Done.");
 		} catch (UnknownHostException e) {
 			logger.severe("Not able to connect to MongoDB: " + e.getMessage());
@@ -186,6 +189,9 @@ public class Main {
 		Environment environment3 = new Environment("Workflow 3");
 		Environment environment4 = new Environment("Workflow 4");
 		Environment environment5 = new Environment("Workflow 5");
+		Environment environment6 = new Environment("Workflow 6");
+		Environment environment7 = new Environment("Workflow 7");
+		Environment environment8 = new Environment("Workflow 8");
 		environment1.addParam("param1");
 		environment1.addParam("param2");
 		environment2.addParam("param3");
@@ -201,16 +207,25 @@ public class Main {
 		Job job3 = new Job(true);
 		Job job4 = new Job(false);
 		Job job5 = new Job(false);
+		Job job6 = new Job(true);
+		Job job7 = new Job(true);
+		Job job8 = new Job(false);
 		job1.setEnvironment(environment1);
 		job2.setEnvironment(environment2);
 		job3.setEnvironment(environment3);
 		job4.setEnvironment(environment4);
 		job5.setEnvironment(environment5);
+		job6.setEnvironment(environment6);
+		job7.setEnvironment(environment7);
+		job8.setEnvironment(environment8);
 		user1.addJob(job1);
 		user2.addJob(job2);
 		user3.addJob(job3);
 		user3.addJob(job5);
 		user4.addJob(job4);
+		user3.addJob(job6);
+		user2.addJob(job7);
+		user2.addJob(job8);
 		
 		// create executions
 		Execution execution1 = new Execution(new Date(), null, JobStatus.RUNNING);
@@ -218,11 +233,17 @@ public class Main {
 		Execution execution3 = new Execution(new Date(), new Date(), JobStatus.FAILED);
 		Execution execution4 = new Execution(new Date(), new Date(), JobStatus.FINISHED);
 		Execution execution5 = new Execution(new Date(), new Date(), JobStatus.FINISHED);
+		Execution execution6 = new Execution(new Date(), new Date(), JobStatus.FINISHED);
+		Execution execution7 = new Execution(new Date(), new Date(), JobStatus.FINISHED);
+		Execution execution8 = new Execution(new Date(), new Date(), JobStatus.FINISHED);
 		execution1.setJob(job1);
 		execution2.setJob(job2);
 		execution3.setJob(job3);
 		execution4.setJob(job4);
 		execution5.setJob(job5);
+		execution6.setJob(job6);
+		execution7.setJob(job7);
+		execution8.setJob(job8);
 		execution1.addComputer(computer1);
 		execution2.addComputer(computer2);
 		execution3.addComputer(computer3);
@@ -232,6 +253,9 @@ public class Main {
 		execution2.addComputer(computer7);
 		execution3.addComputer(computer8);
 		execution4.addComputer(computer8);
+		execution6.addComputer(computer4);
+		execution7.addComputer(computer4);
+		execution8.addComputer(computer4);
 		
 		logger.info("Done.");
 		
@@ -294,6 +318,9 @@ public class Main {
 			em.persist(environment3);
 			em.persist(environment4);
 			em.persist(environment5);
+			em.persist(environment6);
+			em.persist(environment7);
+			em.persist(environment8);
 			logger.info("Done.");
 			
 			logger.info("Persisting jobs...");
@@ -302,6 +329,9 @@ public class Main {
 			em.persist(job3);
 			em.persist(job4);
 			em.persist(job5);
+			em.persist(job6);
+			em.persist(job7);
+			em.persist(job8);
 			logger.info("Done.");
 			
 			logger.info("Persisting executions...");
@@ -310,6 +340,9 @@ public class Main {
 			em.persist(execution3);
 			em.persist(execution4);
 			em.persist(execution5);
+			em.persist(execution6);
+			em.persist(execution7);
+			em.persist(execution8);
 			logger.info("Done.");
 			
 			// delete execution1
@@ -548,33 +581,135 @@ public class Main {
 			BasicDBObject document = new BasicDBObject();
 			document.put("job_id", job.getId());
 			document.put("last_updated", new Date().getTime());
+			
+			if(job.getId() == 4l) {
+				// job 4 --> chromosome_example.json
+				logger.info("Preparing chromosome_example.json for insert...");
+				BasicDBObject primary = new BasicDBObject();
+				primary.put("chromosome", "chr11");
+				primary.put("start", 3001012);
+				primary.put("end", 3001075);
+				BasicDBObject align = new BasicDBObject();
+				align.put("chromosome", "chr13");
+				align.put("start", 70568380);
+				align.put("end", 70568443);
+				ArrayList<String> seq = new ArrayList<String>();
+				seq.add("TCAGCTCATAAATCACCTCCTGCCACAAGCCTGGCCTGGTCCCAGGAGAGTGTCCAGGCTCAGA");
+				seq.add("TCTGTTCATAAACCACCTGCCATGACAAGCCTGGCCTGTTCCCAAGACAATGTCCAGGCTCAGA");
+				
+				BasicDBObject alignmentBlock = new BasicDBObject();
+				alignmentBlock.put("alignment_nr", 0);
+				alignmentBlock.put("primary", primary);
+				alignmentBlock.put("align", align);
+				alignmentBlock.put("blastz", 3500);
+				alignmentBlock.put("seq", seq);
+				
+				document.put("alignment_block", alignmentBlock);
+			} else if(job.getId() == 5l) {
+				// job 5 --> log_example.json
+				logger.info("Preparing log_example.json for insert...");
+				ArrayList<String> log_set = new ArrayList<String>();
+				log_set.add("Starting");
+				log_set.add("Running");
+				log_set.add("Still Running");
+				log_set.add("Finished");
+				
+				BasicDBObject logs = new BasicDBObject();
+				logs.put("log_set", log_set);
+				
+				document.put("logs", logs);
+			} else if(job.getId() == 6l) {
+				// job 6 --> matrix_example.json
+				logger.info("Preparing matrix_example.json for insert...");
+				int[] row1 = {1, 0, 0, 0};
+				int[] row2 = {0, 1, 0, 0};
+				int[] row3 = {0, 0, 1, 0};
+				int[] row4 = {0, 0, 0, 1};
+				int[][] matrix = {row1, row2, row3, row4};
+				
+				BasicDBObject resultMatrix = new BasicDBObject();
+				resultMatrix.put("matrix", matrix);
+				document.put("result_matrix", resultMatrix);
+				document.put("type", "identity_matrix");
+			} else if(job.getId() == 7l) {
+				// job 7 --> admin data
+				logger.info("Preparing admin data for insert...");
+				Query queryAdmins = em.createQuery("SELECT OBJECT(a) FROM Admin a");
+				List<Admin> admins = queryAdmins.getResultList();
+				ArrayList<BasicDBObject> adminList = new ArrayList<BasicDBObject>();
+				for(Admin admin:admins) {
+					ArrayList<String> clusterNames = new ArrayList<String>();
+					for(Cluster cluster:admin.getClusterList()) {
+						clusterNames.add(cluster.getName());
+					}
+					BasicDBObject adminObject = new BasicDBObject();
+					adminObject.put("id", admin.getId());
+					BasicDBObject name = new BasicDBObject();
+					name.put("first_name", admin.getFirstName());
+					name.put("last_name", admin.getLastName());
+					adminObject.put("name", name);
+					BasicDBObject address = new BasicDBObject();
+					address.put("street", admin.getAddress().getStreet());
+					address.put("city", admin.getAddress().getCity());
+					address.put("zip_code", admin.getAddress().getZipCode());
+					adminObject.put("address", address);
+					adminObject.put("cluster_list", clusterNames);
+					adminList.add(adminObject);
+				}
+				document.put("admins", adminList);
+			} else if(job.getId() == 8l) {
+				// job 8 --> listener results
+				logger.info("Preparing listener results for insert...");
+				BasicDBObject persistStatistics = new BasicDBObject();
+				persistStatistics.put("persist_operations", DefaultListener.getPersistCount());
+				persistStatistics.put("overall_persist_time", DefaultListener.getPersistTime());
+				if(DefaultListener.getPersistCount() != 0)
+					persistStatistics.put("average_persist_time", (1.0 * DefaultListener.getPersistTime() / DefaultListener.getPersistCount()));
+				else
+					persistStatistics.put("average_persist_time", 0);
+				
+				BasicDBObject listenerResults = new BasicDBObject();
+				listenerResults.put("load_operations", DefaultListener.getLoadCount());
+				listenerResults.put("update_operations", DefaultListener.getUpdateCount());
+				listenerResults.put("remove_operations", DefaultListener.getRemoveCount());
+				listenerResults.put("persist_information", persistStatistics);
+				document.put("listener_results", listenerResults);
+			}
+			
 			collection.insert(document);
+			logger.info("Insert done.");
 		}
-		
-    	
-    	Set<String> colls = mongoDB.getCollectionNames();
-
-    	for (String s : colls) {
-    	    System.out.println(s);
-    	}
 		logger.info("=============== Finished dst05a() ===============");
     }
 
     public static void dst05b() {
     	logger.info("=============== Starting dst05b() ===============");
     	
-    	
     	logger.info("Querying job with id=5...");
     	DBCollection collection = mongoDB.getCollection("finishedJobs");
     	BasicDBObject pattern = new BasicDBObject();
     	pattern.put("job_id", 5);
-    	
     	DBObject job5 = collection.findOne(pattern);
     	
     	if(job5 == null)
     		logger.info("Job not found.");
     	else
     		logger.info(job5.toString());
+    	
+    	long time = 1325397600;
+    	logger.info("Querying all jobs with last_updated > " + time + "...");
+    	BasicDBObject greaterThan = new BasicDBObject("$gt", time);
+    	pattern = new BasicDBObject();
+    	pattern.put("last_updated", greaterThan);
+    	
+    	BasicDBObject filter = new BasicDBObject();
+    	filter.put("_id", 0);
+    	
+    	DBCursor jobs = collection.find(pattern, filter);
+    	
+    	while(jobs.hasNext()) {
+    		logger.info(jobs.next().toString());
+    	}
     	
 		logger.info("=============== Finished dst05b() ===============");
     }

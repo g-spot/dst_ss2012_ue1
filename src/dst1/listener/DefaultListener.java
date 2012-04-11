@@ -54,6 +54,30 @@ public class DefaultListener {
 				"Remove-Operations: " + removeCount + "\n\n" +
 				"Persist-Operations: " + persistCount + "\n" + 
 				"Overall time to persist: " + persistTime + " ms\n" + 
-				"Average time to persist: " + (1.0 * persistTime / persistCount) + " ms";
+				"Average time to persist: " + (persistCount != 0 ? (1.0 * persistTime / persistCount) : 0) + " ms";
+	}
+	
+	public static synchronized int getLoadCount() {
+		return loadCount;
+	}
+
+	public static synchronized int getUpdateCount() {
+		return updateCount;
+	}
+
+	public static synchronized int getRemoveCount() {
+		return removeCount;
+	}
+
+	public static synchronized int getPersistCount() {
+		return persistCount;
+	}
+
+	public static synchronized long getPersistTime() {
+		return persistTime;
+	}
+
+	public static synchronized Map<Integer, Date> getPersistedObjectStartTime() {
+		return persistedObjectStartTime;
 	}
 }
