@@ -28,6 +28,8 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.MapReduceCommand.OutputType;
+import com.mongodb.MapReduceOutput;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
@@ -656,6 +658,7 @@ public class Main {
 					adminObject.put("cluster_list", clusterNames);
 					adminList.add(adminObject);
 				}
+				document.put("type", "some type information");
 				document.put("admins", adminList);
 			} else if(job.getId() == 8l) {
 				// job 8 --> listener results
@@ -673,6 +676,7 @@ public class Main {
 				listenerResults.put("update_operations", DefaultListener.getUpdateCount());
 				listenerResults.put("remove_operations", DefaultListener.getRemoveCount());
 				listenerResults.put("persist_information", persistStatistics);
+				document.put("type", "some other type information");
 				document.put("listener_results", listenerResults);
 			}
 			
@@ -716,6 +720,30 @@ public class Main {
 
     public static void dst05c() {
     	logger.info("=============== Starting dst05c() ===============");
+    	
+    	DBCollection collection = mongoDB.getCollection("finishedJobs");
+    	
+    	// emit the number 1 with key "elementName" for each member of this (except job_id, last_updated and _id)
+    	String mapFunction = 
+    			"function() { " +
+    			"  for(element in this) { " +
+    			"    if(element != 'job_id' && element != 'last_updated' && element != '_id') " +
+    			"      emit(element, 1); " +
+    			"  }" +
+    			"} ";
+    	// just return the length of the found array of values for each key
+    	String reduceFunction = 
+    			"function(key, values) { " +
+    			"  return values.length; " +
+    			"} ";
+    	MapReduceOutput mapReduceOutput = collection.mapReduce(mapFunction, reduceFunction, null, OutputType.INLINE, null);
+    	
+    	logger.info("List of all existing top-level payload document properties:");
+    	Iterable<DBObject> dbObjects = mapReduceOutput.results();
+    	for(DBObject object : dbObjects) {
+    		logger.info(object.toString());
+    	}
+    	
 		logger.info("=============== Finished dst05c() ===============");
     }
         
