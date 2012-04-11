@@ -9,14 +9,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
@@ -73,31 +69,6 @@ public class Main {
 		}
 		
 		dst01();
-		
-		/*User user = new User();
-		System.out.println("Password before: " + user.getPassword());
-		try {
-			user.setPassword("gerhard");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Password after: " + user.getPassword());
-		
-		try {
-			if(user.comparePassword("gerhard"))
-				System.out.println("gerhard is OK");
-			else
-				System.out.println("gerhard ist NOT OK");
-			if(user.comparePassword("schraml"))
-				System.out.println("schraml is OK");
-			else
-				System.out.println("schraml ist NOT OK");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
 		dst02a();
 		dst02b();
 		dst02c();
@@ -405,6 +376,7 @@ public class Main {
 		logger.info("=============== Finished dst02a() ===============");
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void dst02b() {
 		logger.info("=============== Starting dst02b() ===============");
 		
@@ -558,8 +530,6 @@ public class Main {
 	public static void dst04b() {
 		logger.info("=============== Starting dst04b() ===============");
 		
-		Computer computer = new Computer();
-		
 		try {
 			logger.info("Starting transaction...");
 			em.getTransaction().begin();
@@ -619,7 +589,8 @@ public class Main {
 		logger.info("=============== Finished dst04d() ===============");
 	}
 
-    public static void dst05a() {
+    @SuppressWarnings("unchecked")
+	public static void dst05a() {
     	logger.info("=============== Starting dst05a() ===============");
     	
     	logger.info("Querying finished Jobs...");
@@ -806,7 +777,8 @@ public class Main {
 		logger.addHandler(handler);
     }
     
-    private static void displayQueryResults(Query query) {
+    @SuppressWarnings("unchecked")
+	private static void displayQueryResults(Query query) {
     	List<Object> resultList = query.getResultList();
     	int i = 0;
     	if(resultList.isEmpty())

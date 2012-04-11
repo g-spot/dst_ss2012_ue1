@@ -16,6 +16,7 @@ import dst1.model.JobStatus;
 
 public class JobQueries {
 	
+	@SuppressWarnings("unchecked")
 	public static List<Job> findJobsByUserAndWorkflow(EntityManager em, String username, String workflow) {
 		Session session = (Session)em.getDelegate();
 		Criteria criteria = session.createCriteria(Job.class);
@@ -33,6 +34,7 @@ public class JobQueries {
 		return criteria.list();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<Job> findFinishedJobsByStartAndEndDate(EntityManager em, Date startDate, Date endDate) {
 		Session session = (Session)em.getDelegate();
 		Criteria criteria = session.createCriteria(Job.class);

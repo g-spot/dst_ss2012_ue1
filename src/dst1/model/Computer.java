@@ -3,7 +3,6 @@ package dst1.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.NamedQuery;
